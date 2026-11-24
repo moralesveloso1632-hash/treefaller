@@ -19,16 +19,18 @@ struct Mod {
 
 #[mod_api::horizon_mod]
 impl Hooks for Mod {
-    fn player_destroyed_block(&self, host: &mut dyn ServerHost, event: &mut PlayerDestroyedBlockEvent) {
-        let has_player = host.players().acting_player().is_some();
+    fn player_destroyed_block(
+        &self,
+        host: &mut dyn ServerHost,
+        event: &mut PlayerDestroyedBlockEvent,
+    ) {
+        if self.busy.swap(true, Ordering::Acquire) {
+            return;
+        }
 
-        host.messages().broadcast(
-    if has_player {
-        Text::literal("TreeFeller TEST: acting_player = Some")
-    } else {
-        Text::literal("TreeFeller TEST: acting_player = None")
-    }
-);
+        fell(host, event.pos, event.state);
+
+        self.busy.store(false, Ordering::Release);
     }
 }
 
