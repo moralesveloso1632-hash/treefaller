@@ -10374,7 +10374,7 @@ pub state: BlockState,
 pub changed: mod_api :: BlockKey,
 pub moved: bool,
 }
-#[doc(hidden)] pub fn dispatch_neighbor_changed(level: &mut dyn LevelTicksHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, changed: mod_api :: BlockKey, moved: bool) {
+#[doc(hidden)] pub fn dispatch_neighbor_changed(level: &mut dyn LevelTicksHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, changed: mod_api :: BlockKey, moved: bool) { 
 
 if !super::has_part_hook(HookId::NeighborChanged) { return; } let part_table = super::parts(HookId::NeighborChanged, "neighbor_changed"); let parts = part_table.for_hook(HookId::NeighborChanged).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = NeighborChangedEvent { dimension, pos, state, changed, moved }; for part in super::entered_parts(parts, "neighbor_changed") { part.neighbor_changed(&mut *level, &mut event);  }  }
 /// What [`BlockPart::random_tick`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -10385,8 +10385,8 @@ pub dimension: LevelDimension,
 pub pos: BlockPos,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_random_tick(level: &mut dyn LevelWriteHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, handled: & mut bool) {
-if *handled { return; }
+#[doc(hidden)] pub fn dispatch_random_tick(level: &mut dyn LevelWriteHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, handled: & mut bool) { 
+if *handled { return; } 
 if !super::has_part_hook(HookId::RandomTick) { return; } let part_table = super::parts(HookId::RandomTick, "random_tick"); let parts = part_table.for_hook(HookId::RandomTick).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = RandomTickEvent { dimension, pos, state }; for part in super::entered_parts(parts, "random_tick") { if matches!(part.random_tick(&mut *level, &mut event), Flow::Cancel) { *handled = true;  break; }  }  }
 /// What [`BlockPart::tick_block`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -10396,8 +10396,8 @@ pub dimension: LevelDimension,
 pub pos: BlockPos,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_tick_block(level: &mut dyn LevelWriteHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, handled: & mut bool) {
-if *handled { return; }
+#[doc(hidden)] pub fn dispatch_tick_block(level: &mut dyn LevelWriteHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, handled: & mut bool) { 
+if *handled { return; } 
 if !super::has_part_hook(HookId::TickBlock) { return; } let part_table = super::parts(HookId::TickBlock, "tick_block"); let parts = part_table.for_hook(HookId::TickBlock).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = TickBlockEvent { dimension, pos, state }; for part in super::entered_parts(parts, "tick_block") { if matches!(part.tick_block(&mut *level, &mut event), Flow::Cancel) { *handled = true;  break; }  }  }
 /// What [`BlockPart::update_shape`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -10412,7 +10412,7 @@ pub neighbour: BlockState,
 }
 #[doc(hidden)] pub fn dispatch_update_shape(level: &mut dyn LevelTicksHost, call: calls::UpdateShapeCall<'_>) { let calls::UpdateShapeCall { dimension, pos, state, direction, neighbour_pos, neighbour, new } = call;
 
-if new.is_some() { return; }
+if new.is_some() { return; } 
 if !super::has_part_hook(HookId::UpdateShape) { return; } let part_table = super::parts(HookId::UpdateShape, "update_shape"); let parts = part_table.for_hook(HookId::UpdateShape).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = UpdateShapeEvent { dimension, pos, state, direction, neighbour_pos, neighbour }; for part in super::entered_parts(parts, "update_shape") { if let Some(replacement) = part.update_shape(&mut *level, &mut event) { *new = Some(replacement);  break; }  }  }
 /// What [`Hooks::command`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -10473,8 +10473,8 @@ pub struct BlockEntityEvent<'a> {
 pub block: & 'a str,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_block_entity(mut level: LevelSide, block: & str, state: BlockState, entity: & mut Option < Compound >) {
-if entity.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_block_entity(mut level: LevelSide, block: & str, state: BlockState, entity: & mut Option < Compound >) { 
+if entity.is_some() { return; } 
 if !super::has_part_hook(HookId::BlockEntity) { return; } let part_table = super::parts(HookId::BlockEntity, "block_entity"); let parts = part_table.for_hook(HookId::BlockEntity).map_or(&[][..], |table| table.block_entity(|| Some(block))); if parts.is_empty() { return; } let mut event = BlockEntityEvent { block, state }; for part in super::entered_parts(parts, "block_entity") { if let Some(replacement) = part.block_entity(level.reborrow(), &mut event) { *entity = Some(replacement);  break; }  }  }
 /// What [`BlockEntityPart::block_entity_ticks`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -10483,7 +10483,7 @@ pub struct BlockEntityTicksEvent<'a> {
 pub block: & 'a str,
 pub ticks: bool,
 }
-#[doc(hidden)] pub fn dispatch_block_entity_ticks(host: &dyn Host, block: & str, ticks: & mut bool) {
+#[doc(hidden)] pub fn dispatch_block_entity_ticks(host: &dyn Host, block: & str, ticks: & mut bool) { 
 
 if !super::has_part_hook(HookId::BlockEntityTicks) { return; } let part_table = super::parts(HookId::BlockEntityTicks, "block_entity_ticks"); let parts = part_table.for_hook(HookId::BlockEntityTicks).map_or(&[][..], |table| table.block_entity(|| Some(block))); if parts.is_empty() { return; } let mut event = BlockEntityTicksEvent { block, ticks: *ticks }; for part in super::entered_parts(parts, "block_entity_ticks") { part.block_entity_ticks(host, &mut event);  } *ticks = event.ticks; }
 /// What [`BlockEntityPart::block_entity_tick`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -10494,7 +10494,7 @@ pub reply: & 'a mut mod_api :: BlockEntityTickReply,
 pub pos: [i32 ; 3],
 pub entity: ModBlockEntityView < 'a >,
 }
-#[doc(hidden)] pub fn dispatch_block_entity_tick(host: &mut dyn ServerHost, reply: & mut mod_api :: BlockEntityTickReply, pos: [i32 ; 3], entity: & mut ModBlockEntity) {
+#[doc(hidden)] pub fn dispatch_block_entity_tick(host: &mut dyn ServerHost, reply: & mut mod_api :: BlockEntityTickReply, pos: [i32 ; 3], entity: & mut ModBlockEntity) { 
 
 if !super::has_part_hook(HookId::BlockEntityTick) { return; } let part_table = super::parts(HookId::BlockEntityTick, "block_entity_tick"); let parts = part_table.for_hook(HookId::BlockEntityTick).map_or(&[][..], |table| table.block_entity_kind(|| Some(entity.id()))); if parts.is_empty() { return; } let mut event = BlockEntityTickEvent { reply, pos, entity: ModBlockEntityView::new(entity) }; let mut tick_changed = false; for part in super::entered_parts(parts, "block_entity_tick") { *event.reply = BlockEntityTickReply::Changed; event.entity.__begin_tick_listener(); part.block_entity_tick(&mut *host, &mut event); let listener_reply = *event.reply; event.entity.__finish_tick_listener(listener_reply); tick_changed |= listener_reply == BlockEntityTickReply::Changed;  } *event.reply = if tick_changed { BlockEntityTickReply::Changed } else { BlockEntityTickReply::Unchanged };  }
 /// What [`BlockEntityPart::block_entity_update_tag`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -10504,8 +10504,8 @@ pub struct BlockEntityUpdateTagEvent<'a> {
 pub pos: [i32 ; 3],
 pub entity: & 'a ModBlockEntity,
 }
-#[doc(hidden)] pub fn dispatch_block_entity_update_tag(pos: [i32 ; 3], entity: & ModBlockEntity, tag: & mut Option < Compound >) {
-if tag.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_block_entity_update_tag(pos: [i32 ; 3], entity: & ModBlockEntity, tag: & mut Option < Compound >) { 
+if tag.is_some() { return; } 
 if !super::has_part_hook(HookId::BlockEntityUpdateTag) { return; } let part_table = super::parts(HookId::BlockEntityUpdateTag, "block_entity_update_tag"); let parts = part_table.for_hook(HookId::BlockEntityUpdateTag).map_or(&[][..], |table| table.block_entity_kind(|| Some(entity.id()))); if parts.is_empty() { return; } let mut event = BlockEntityUpdateTagEvent { pos, entity }; for part in super::entered_parts(parts, "block_entity_update_tag") { if let Some(replacement) = part.block_entity_update_tag(&mut event) { *tag = Some(replacement);  break; }  }  }
 /// What [`BlockEntityPart::screen`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -10513,8 +10513,8 @@ if !super::has_part_hook(HookId::BlockEntityUpdateTag) { return; } let part_tabl
 pub struct ScreenEvent<'a> {
 pub block: & 'a str,
 }
-#[doc(hidden)] pub fn dispatch_screen(host: &dyn Host, block: & str, screen: & mut Option < mod_api :: Screen >) {
-if screen.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_screen(host: &dyn Host, block: & str, screen: & mut Option < mod_api :: Screen >) { 
+if screen.is_some() { return; } 
 if !super::has_part_hook(HookId::Screen) { return; } let part_table = super::parts(HookId::Screen, "screen"); let parts = part_table.for_hook(HookId::Screen).map_or(&[][..], |table| table.block_entity(|| Some(block))); if parts.is_empty() { return; } let mut event = ScreenEvent { block }; for part in super::entered_parts(parts, "screen") { if let Some(replacement) = part.screen(host, &mut event) { *screen = Some(replacement);  break; }  }  }
 /// What [`BlockEntityPart::screen_draw`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -10525,7 +10525,7 @@ pub data: & 'a [i32],
 pub draw: & 'a mut dyn DrawContext,
 pub origin: [f32 ; 2],
 }
-#[doc(hidden)] pub fn dispatch_screen_draw(host: &dyn ClientHost, block: & str, data: & [i32], draw: & mut dyn DrawContext, origin: [f32 ; 2]) {
+#[doc(hidden)] pub fn dispatch_screen_draw(host: &dyn ClientHost, block: & str, data: & [i32], draw: & mut dyn DrawContext, origin: [f32 ; 2]) { 
 
 if !super::has_part_hook(HookId::ScreenDraw) { return; } let part_table = super::parts(HookId::ScreenDraw, "screen_draw"); let parts = part_table.for_hook(HookId::ScreenDraw).map_or(&[][..], |table| table.block_entity(|| Some(block))); if parts.is_empty() { return; } let mut event = ScreenDrawEvent { block, data, draw, origin }; for part in super::entered_parts(parts, "screen_draw") { part.screen_draw(host, &mut event);  }  }
 /// What [`BlockEntityPart::screen_click`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -10537,8 +10537,8 @@ pub data: & 'a [i32],
 pub at: [f32 ; 2],
 pub right: bool,
 }
-#[doc(hidden)] pub fn dispatch_screen_click(host: &dyn ClientHost, block: & str, data: & [i32], at: [f32 ; 2], right: bool, button: & mut Option < i32 >) {
-if button.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_screen_click(host: &dyn ClientHost, block: & str, data: & [i32], at: [f32 ; 2], right: bool, button: & mut Option < i32 >) { 
+if button.is_some() { return; } 
 if !super::has_part_hook(HookId::ScreenClick) { return; } let part_table = super::parts(HookId::ScreenClick, "screen_click"); let parts = part_table.for_hook(HookId::ScreenClick).map_or(&[][..], |table| table.block_entity(|| Some(block))); if parts.is_empty() { return; } let mut event = ScreenClickEvent { block, data, at, right }; for part in super::entered_parts(parts, "screen_click") { if let Some(replacement) = part.screen_click(host, &mut event) { *button = Some(replacement);  break; }  }  }
 /// What [`BlockEntityPart::screen_tooltip`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -10549,7 +10549,7 @@ pub data: & 'a [i32],
 pub at: [f32 ; 2],
 pub lines: & 'a mut Vec < String >,
 }
-#[doc(hidden)] pub fn dispatch_screen_tooltip(host: &dyn ClientHost, block: & str, data: & [i32], at: [f32 ; 2], lines: & mut Vec < String >) {
+#[doc(hidden)] pub fn dispatch_screen_tooltip(host: &dyn ClientHost, block: & str, data: & [i32], at: [f32 ; 2], lines: & mut Vec < String >) { 
 
 if !super::has_part_hook(HookId::ScreenTooltip) { return; } let part_table = super::parts(HookId::ScreenTooltip, "screen_tooltip"); let parts = part_table.for_hook(HookId::ScreenTooltip).map_or(&[][..], |table| table.block_entity(|| Some(block))); if parts.is_empty() { return; } let mut event = ScreenTooltipEvent { block, data, at, lines }; for part in super::entered_parts(parts, "screen_tooltip") { part.screen_tooltip(host, &mut event);  }  }
 /// What [`BlockEntityPart::menu_button`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -10560,7 +10560,7 @@ pub context: & 'a mod_api :: item :: menu :: MenuButtonContext,
 pub entity: ModBlockEntityView < 'a >,
 pub carried: & 'a mut Option < mod_api :: ItemStack >,
 }
-#[doc(hidden)] pub fn dispatch_menu_button(host: &mut dyn ServerHost, context: & mod_api :: item :: menu :: MenuButtonContext, entity: & mut ModBlockEntity, carried: & mut Option < mod_api :: ItemStack >) {
+#[doc(hidden)] pub fn dispatch_menu_button(host: &mut dyn ServerHost, context: & mod_api :: item :: menu :: MenuButtonContext, entity: & mut ModBlockEntity, carried: & mut Option < mod_api :: ItemStack >) { 
 
 if !super::has_part_hook(HookId::MenuButton) { return; } let part_table = super::parts(HookId::MenuButton, "menu_button"); let parts = part_table.for_hook(HookId::MenuButton).map_or(&[][..], |table| table.block_entity_kind(|| Some(entity.id()))); if parts.is_empty() { return; } let mut event = MenuButtonEvent { context, entity: ModBlockEntityView::new(entity), carried }; for part in super::entered_parts(parts, "menu_button") { part.menu_button(&mut *host, &mut event);  }  }
 /// What [`Hooks::register_commands`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -10612,7 +10612,7 @@ pub struct TooltipEvent<'a> {
 pub stack: & 'a ItemStack,
 pub lines: & 'a mut Vec < (Text , u32) >,
 }
-#[doc(hidden)] pub fn dispatch_tooltip(host: &dyn ClientHost, stack: & ItemStack, lines: & mut Vec < (Text , u32) >) {
+#[doc(hidden)] pub fn dispatch_tooltip(host: &dyn ClientHost, stack: & ItemStack, lines: & mut Vec < (Text , u32) >) { 
 
 if !super::has_part_hook(HookId::Tooltip) { return; } let part_table = super::parts(HookId::Tooltip, "tooltip"); let parts = part_table.for_hook(HookId::Tooltip).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = TooltipEvent { stack, lines }; for part in super::entered_parts(parts, "tooltip") { part.tooltip(host, &mut event);  }  }
 /// What [`ItemPart::use_on`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -10629,7 +10629,7 @@ pub player_entity_id: i32,
 }
 #[doc(hidden)] pub fn dispatch_use_on(mut host: HostSide, call: calls::UseOnCall<'_>) { let calls::UseOnCall { stack, pos, face, hand, hit, player, player_entity_id, result } = call;
 
-if result.is_some() { return; }
+if result.is_some() { return; } 
 if !super::has_part_hook(HookId::UseOn) { return; } let part_table = super::parts(HookId::UseOn, "use_on"); let parts = part_table.for_hook(HookId::UseOn).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = UseOnEvent { stack, pos, face, hand, hit, player, player_entity_id }; for part in super::entered_parts(parts, "use_on") { if let Some(replacement) = part.use_on(host.reborrow(), &mut event) { *result = Some(replacement);  break; }  }  }
 /// What [`ItemPart::use_item`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -10642,7 +10642,7 @@ pub player_entity_id: i32,
 }
 #[doc(hidden)] pub fn dispatch_use_item(mut host: HostSide, call: calls::UseItemCall<'_>) { let calls::UseItemCall { stack, hand, player, player_entity_id, result } = call;
 
-if result.is_some() { return; }
+if result.is_some() { return; } 
 if !super::has_part_hook(HookId::UseItem) { return; } let part_table = super::parts(HookId::UseItem, "use_item"); let parts = part_table.for_hook(HookId::UseItem).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = UseItemEvent { stack, hand, player, player_entity_id }; for part in super::entered_parts(parts, "use_item") { if let Some(replacement) = part.use_item(host.reborrow(), &mut event) { *result = Some(replacement);  break; }  }  }
 /// What [`Hooks::break_block`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -10806,7 +10806,7 @@ pub stack: & 'a ItemStack,
 pub entity: u32,
 pub kind: & 'a str,
 }
-#[doc(hidden)] pub fn dispatch_hurt_enemy(host: &mut dyn ServerHost, stack: & ItemStack, entity: u32, kind: & str) {
+#[doc(hidden)] pub fn dispatch_hurt_enemy(host: &mut dyn ServerHost, stack: & ItemStack, entity: u32, kind: & str) { 
 
 if !super::has_part_hook(HookId::HurtEnemy) { return; } let part_table = super::parts(HookId::HurtEnemy, "hurt_enemy"); let parts = part_table.for_hook(HookId::HurtEnemy).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = HurtEnemyEvent { stack, entity, kind }; for part in super::entered_parts(parts, "hurt_enemy") { part.hurt_enemy(&mut *host, &mut event);  }  }
 /// What [`ItemPart::inventory_tick`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -10817,7 +10817,7 @@ pub stack: & 'a ItemStack,
 pub slot: i32,
 pub selected: bool,
 }
-#[doc(hidden)] pub fn dispatch_inventory_tick(host: &mut dyn ServerHost, stack: & ItemStack, slot: i32, selected: bool) {
+#[doc(hidden)] pub fn dispatch_inventory_tick(host: &mut dyn ServerHost, stack: & ItemStack, slot: i32, selected: bool) { 
 
 if !super::has_part_hook(HookId::InventoryTick) { return; } let part_table = super::parts(HookId::InventoryTick, "inventory_tick"); let parts = part_table.for_hook(HookId::InventoryTick).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = InventoryTickEvent { stack, slot, selected }; for part in super::entered_parts(parts, "inventory_tick") { part.inventory_tick(&mut *host, &mut event);  }  }
 /// What [`Hooks::on_equip`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -10840,7 +10840,7 @@ pub face: Direction,
 pub direct: bool,
 pub signal: i32,
 }
-#[doc(hidden)] pub fn dispatch_block_signal(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, face: Direction, direct: bool, signal: & mut i32) {
+#[doc(hidden)] pub fn dispatch_block_signal(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, face: Direction, direct: bool, signal: & mut i32) { 
 
 if !super::has_part_hook(HookId::BlockSignal) { return; } let part_table = super::parts(HookId::BlockSignal, "block_signal"); let parts = part_table.for_hook(HookId::BlockSignal).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = BlockSignalEvent { dimension, pos, state, face, direct, signal: *signal }; for part in super::entered_parts(parts, "block_signal") { part.block_signal(level, &mut event);  } *signal = event.signal; }
 /// What [`BlockPart::is_signal_source`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -10850,7 +10850,7 @@ pub struct IsSignalSourceEvent {
 pub state: BlockState,
 pub source: bool,
 }
-#[doc(hidden)] pub fn dispatch_is_signal_source(level: &dyn LevelHost, state: BlockState, source: & mut bool) {
+#[doc(hidden)] pub fn dispatch_is_signal_source(level: &dyn LevelHost, state: BlockState, source: & mut bool) { 
 
 if !super::has_part_hook(HookId::IsSignalSource) { return; } let part_table = super::parts(HookId::IsSignalSource, "is_signal_source"); let parts = part_table.for_hook(HookId::IsSignalSource).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = IsSignalSourceEvent { state, source: *source }; for part in super::entered_parts(parts, "is_signal_source") { part.is_signal_source(level, &mut event);  } *source = event.source; }
 /// What [`Hooks::health_hud`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11044,7 +11044,7 @@ pub struct ItemBarEvent<'a> {
 pub stack: & 'a ItemStack,
 pub bar: & 'a mut Option < (i32 , u32) >,
 }
-#[doc(hidden)] pub fn dispatch_item_bar(host: &dyn ClientHost, stack: & ItemStack, bar: & mut Option < (i32 , u32) >) {
+#[doc(hidden)] pub fn dispatch_item_bar(host: &dyn ClientHost, stack: & ItemStack, bar: & mut Option < (i32 , u32) >) { 
 
 if !super::has_part_hook(HookId::ItemBar) { return; } let part_table = super::parts(HookId::ItemBar, "item_bar"); let parts = part_table.for_hook(HookId::ItemBar).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = ItemBarEvent { stack, bar }; for part in super::entered_parts(parts, "item_bar") { part.item_bar(host, &mut event);  }  }
 /// What [`BlockPart::has_analog_output`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11054,7 +11054,7 @@ pub struct HasAnalogOutputEvent {
 pub state: BlockState,
 pub output: bool,
 }
-#[doc(hidden)] pub fn dispatch_has_analog_output(level: &dyn LevelHost, state: BlockState, output: & mut bool) {
+#[doc(hidden)] pub fn dispatch_has_analog_output(level: &dyn LevelHost, state: BlockState, output: & mut bool) { 
 
 if !super::has_part_hook(HookId::HasAnalogOutput) { return; } let part_table = super::parts(HookId::HasAnalogOutput, "has_analog_output"); let parts = part_table.for_hook(HookId::HasAnalogOutput).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = HasAnalogOutputEvent { state, output: *output }; for part in super::entered_parts(parts, "has_analog_output") { part.has_analog_output(level, &mut event);  } *output = event.output; }
 /// What [`BlockPart::analog_output`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11067,7 +11067,7 @@ pub state: BlockState,
 pub face: Direction,
 pub output: i32,
 }
-#[doc(hidden)] pub fn dispatch_analog_output(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, face: Direction, output: & mut i32) {
+#[doc(hidden)] pub fn dispatch_analog_output(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, face: Direction, output: & mut i32) { 
 
 if !super::has_part_hook(HookId::AnalogOutput) { return; } let part_table = super::parts(HookId::AnalogOutput, "analog_output"); let parts = part_table.for_hook(HookId::AnalogOutput).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = AnalogOutputEvent { dimension, pos, state, face, output: *output }; for part in super::entered_parts(parts, "analog_output") { part.analog_output(level, &mut event);  } *output = event.output; }
 /// What [`Hooks::component_types`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11087,8 +11087,8 @@ pub pos: [i32 ; 3],
 pub facing: Direction,
 pub stack: & 'a ItemStack,
 }
-#[doc(hidden)] pub fn dispatch_dispense_item(host: &mut dyn ServerHost, dimension: & str, pos: [i32 ; 3], facing: Direction, stack: & ItemStack, answer: & mut Option < mod_api :: Dispensed >) {
-if answer.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_dispense_item(host: &mut dyn ServerHost, dimension: & str, pos: [i32 ; 3], facing: Direction, stack: & ItemStack, answer: & mut Option < mod_api :: Dispensed >) { 
+if answer.is_some() { return; } 
 if !super::has_part_hook(HookId::DispenseItem) { return; } let part_table = super::parts(HookId::DispenseItem, "dispense_item"); let parts = part_table.for_hook(HookId::DispenseItem).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = DispenseItemEvent { dimension, pos, facing, stack }; for part in super::entered_parts(parts, "dispense_item") { if let Some(replacement) = part.dispense_item(&mut *host, &mut event) { *answer = Some(replacement);  break; }  }  }
 /// What [`ItemPart::tooltip_component`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -11096,8 +11096,8 @@ if !super::has_part_hook(HookId::DispenseItem) { return; } let part_table = supe
 pub struct TooltipComponentEvent<'a> {
 pub stack: & 'a ItemStack,
 }
-#[doc(hidden)] pub fn dispatch_tooltip_component(host: &dyn ClientHost, stack: & ItemStack, size: & mut Option < [f32 ; 2] >) {
-if size.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_tooltip_component(host: &dyn ClientHost, stack: & ItemStack, size: & mut Option < [f32 ; 2] >) { 
+if size.is_some() { return; } 
 if !super::has_part_hook(HookId::TooltipComponent) { return; } let part_table = super::parts(HookId::TooltipComponent, "tooltip_component"); let parts = part_table.for_hook(HookId::TooltipComponent).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = TooltipComponentEvent { stack }; for part in super::entered_parts(parts, "tooltip_component") { if let Some(replacement) = part.tooltip_component(host, &mut event) { *size = Some(replacement);  break; }  }  }
 /// What [`ItemPart::tooltip_component_draw`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -11108,7 +11108,7 @@ pub draw: & 'a mut dyn DrawContext,
 pub origin: [f32 ; 2],
 pub size: [f32 ; 2],
 }
-#[doc(hidden)] pub fn dispatch_tooltip_component_draw(host: &dyn ClientHost, stack: & ItemStack, draw: & mut dyn DrawContext, origin: [f32 ; 2], size: [f32 ; 2]) {
+#[doc(hidden)] pub fn dispatch_tooltip_component_draw(host: &dyn ClientHost, stack: & ItemStack, draw: & mut dyn DrawContext, origin: [f32 ; 2], size: [f32 ; 2]) { 
 
 if !super::has_part_hook(HookId::TooltipComponentDraw) { return; } let part_table = super::parts(HookId::TooltipComponentDraw, "tooltip_component_draw"); let parts = part_table.for_hook(HookId::TooltipComponentDraw).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = TooltipComponentDrawEvent { stack, draw, origin, size }; for part in super::entered_parts(parts, "tooltip_component_draw") { part.tooltip_component_draw(host, &mut event);  }  }
 /// What [`BlockPart::can_survive_v2`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11118,8 +11118,8 @@ pub struct CanSurviveV2Event {
 pub pos: BlockPos,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_can_survive_v2(context: &dyn WorldgenHost, pos: BlockPos, state: BlockState, survives: & mut Option < bool >) {
-if survives.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_can_survive_v2(context: &dyn WorldgenHost, pos: BlockPos, state: BlockState, survives: & mut Option < bool >) { 
+if survives.is_some() { return; } 
 if !super::has_part_hook(HookId::CanSurviveV2) { return; } let part_table = super::worldgen_parts(); let parts = part_table.for_hook(HookId::CanSurviveV2).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = CanSurviveV2Event { pos, state }; for part in super::entered_parts(parts, "can_survive_v2") { if let Some(replacement) = part.can_survive_v2(context, &mut event) { *survives = Some(replacement);  break; }  }  }
 /// What [`BlockPart::can_survive`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -11129,8 +11129,8 @@ pub dimension: LevelDimension,
 pub pos: BlockPos,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_can_survive(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, survives: & mut Option < bool >) {
-if survives.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_can_survive(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, survives: & mut Option < bool >) { 
+if survives.is_some() { return; } 
 if !super::has_part_hook(HookId::CanSurvive) { return; } let part_table = super::parts(HookId::CanSurvive, "can_survive"); let parts = part_table.for_hook(HookId::CanSurvive).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = CanSurviveEvent { dimension, pos, state }; for part in super::entered_parts(parts, "can_survive") { if let Some(replacement) = part.can_survive(level, &mut event) { *survives = Some(replacement);  break; }  }  }
 /// What [`BlockPart::may_place_on_v2`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -11140,8 +11140,8 @@ pub state: BlockState,
 pub ground: BlockState,
 pub ground_pos: BlockPos,
 }
-#[doc(hidden)] pub fn dispatch_may_place_on_v2(context: &dyn WorldgenHost, state: BlockState, ground: BlockState, ground_pos: BlockPos, may: & mut Option < bool >) {
-if may.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_may_place_on_v2(context: &dyn WorldgenHost, state: BlockState, ground: BlockState, ground_pos: BlockPos, may: & mut Option < bool >) { 
+if may.is_some() { return; } 
 if !super::has_part_hook(HookId::MayPlaceOnV2) { return; } let part_table = super::worldgen_parts(); let parts = part_table.for_hook(HookId::MayPlaceOnV2).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = MayPlaceOnV2Event { state, ground, ground_pos }; for part in super::entered_parts(parts, "may_place_on_v2") { if let Some(replacement) = part.may_place_on_v2(context, &mut event) { *may = Some(replacement);  break; }  }  }
 /// What [`BlockPart::may_place_on`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -11152,8 +11152,8 @@ pub state: BlockState,
 pub ground: BlockState,
 pub ground_pos: BlockPos,
 }
-#[doc(hidden)] pub fn dispatch_may_place_on(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, ground: BlockState, ground_pos: BlockPos, may: & mut Option < bool >) {
-if may.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_may_place_on(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, ground: BlockState, ground_pos: BlockPos, may: & mut Option < bool >) { 
+if may.is_some() { return; } 
 if !super::has_part_hook(HookId::MayPlaceOn) { return; } let part_table = super::parts(HookId::MayPlaceOn, "may_place_on"); let parts = part_table.for_hook(HookId::MayPlaceOn).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = MayPlaceOnEvent { dimension, state, ground, ground_pos }; for part in super::entered_parts(parts, "may_place_on") { if let Some(replacement) = part.may_place_on(level, &mut event) { *may = Some(replacement);  break; }  }  }
 /// What [`BlockEntityPart::block_entity_submit`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -11165,7 +11165,7 @@ pub state: BlockState,
 pub entity: & 'a ModBlockEntity,
 pub draw: & 'a mut dyn BlockEntityDrawContext,
 }
-#[doc(hidden)] pub fn dispatch_block_entity_submit(host: &dyn ClientHost, pos: [i32 ; 3], block: & str, state: BlockState, entity: & ModBlockEntity, draw: & mut dyn BlockEntityDrawContext) {
+#[doc(hidden)] pub fn dispatch_block_entity_submit(host: &dyn ClientHost, pos: [i32 ; 3], block: & str, state: BlockState, entity: & ModBlockEntity, draw: & mut dyn BlockEntityDrawContext) { 
 
 if !super::has_part_hook(HookId::BlockEntitySubmit) { return; } let part_table = super::parts(HookId::BlockEntitySubmit, "block_entity_submit"); let parts = part_table.for_hook(HookId::BlockEntitySubmit).map_or(&[][..], |table| table.block_entity(|| Some(block))); if parts.is_empty() { return; } let mut event = BlockEntitySubmitEvent { pos, block, state, entity, draw }; for part in super::entered_parts(parts, "block_entity_submit") { part.block_entity_submit(host, &mut event);  }  }
 /// What [`BlockEntityPart::block_entity_render_bounding_box`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11178,7 +11178,7 @@ pub state: BlockState,
 pub entity: & 'a ModBlockEntity,
 pub bounds: & 'a mut [f32 ; 6],
 }
-#[doc(hidden)] pub fn dispatch_block_entity_render_bounding_box(host: &dyn ClientHost, pos: [i32 ; 3], block: & str, state: BlockState, entity: & ModBlockEntity, bounds: & mut [f32 ; 6]) {
+#[doc(hidden)] pub fn dispatch_block_entity_render_bounding_box(host: &dyn ClientHost, pos: [i32 ; 3], block: & str, state: BlockState, entity: & ModBlockEntity, bounds: & mut [f32 ; 6]) { 
 
 if !super::has_part_hook(HookId::BlockEntityRenderBoundingBox) { return; } let part_table = super::parts(HookId::BlockEntityRenderBoundingBox, "block_entity_render_bounding_box"); let parts = part_table.for_hook(HookId::BlockEntityRenderBoundingBox).map_or(&[][..], |table| table.block_entity(|| Some(block))); if parts.is_empty() { return; } let mut event = BlockEntityRenderBoundingBoxEvent { pos, block, state, entity, bounds }; for part in super::entered_parts(parts, "block_entity_render_bounding_box") { part.block_entity_render_bounding_box(host, &mut event);  }  }
 /// What [`BlockPart::is_valid_bonemeal_target`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11189,8 +11189,8 @@ pub dimension: LevelDimension,
 pub pos: BlockPos,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_is_valid_bonemeal_target(mut level: LevelSide, dimension: LevelDimension, pos: BlockPos, state: BlockState, valid: & mut Option < bool >) {
-if valid.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_is_valid_bonemeal_target(mut level: LevelSide, dimension: LevelDimension, pos: BlockPos, state: BlockState, valid: & mut Option < bool >) { 
+if valid.is_some() { return; } 
 if !super::has_part_hook(HookId::IsValidBonemealTarget) { return; } let part_table = super::parts(HookId::IsValidBonemealTarget, "is_valid_bonemeal_target"); let parts = part_table.for_hook(HookId::IsValidBonemealTarget).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = IsValidBonemealTargetEvent { dimension, pos, state }; for part in super::entered_parts(parts, "is_valid_bonemeal_target") { if let Some(replacement) = part.is_valid_bonemeal_target(level.reborrow(), &mut event) { *valid = Some(replacement);  break; }  }  }
 /// What [`BlockPart::is_bonemeal_success`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -11201,7 +11201,7 @@ pub pos: BlockPos,
 pub state: BlockState,
 pub success: bool,
 }
-#[doc(hidden)] pub fn dispatch_is_bonemeal_success(level: &mut dyn LevelRandomHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, success: & mut bool) {
+#[doc(hidden)] pub fn dispatch_is_bonemeal_success(level: &mut dyn LevelRandomHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, success: & mut bool) { 
 
 if !super::has_part_hook(HookId::IsBonemealSuccess) { return; } let part_table = super::parts(HookId::IsBonemealSuccess, "is_bonemeal_success"); let parts = part_table.for_hook(HookId::IsBonemealSuccess).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = IsBonemealSuccessEvent { dimension, pos, state, success: *success }; for part in super::entered_parts(parts, "is_bonemeal_success") { part.is_bonemeal_success(&mut *level, &mut event);  } *success = event.success; }
 /// What [`BlockPart::perform_bonemeal`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11212,7 +11212,7 @@ pub dimension: LevelDimension,
 pub pos: BlockPos,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_perform_bonemeal(level: &mut dyn LevelWriteHost, dimension: LevelDimension, pos: BlockPos, state: BlockState) {
+#[doc(hidden)] pub fn dispatch_perform_bonemeal(level: &mut dyn LevelWriteHost, dimension: LevelDimension, pos: BlockPos, state: BlockState) { 
 
 if !super::has_part_hook(HookId::PerformBonemeal) { return; } let part_table = super::parts(HookId::PerformBonemeal, "perform_bonemeal"); let parts = part_table.for_hook(HookId::PerformBonemeal).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = PerformBonemealEvent { dimension, pos, state }; for part in super::entered_parts(parts, "perform_bonemeal") { part.perform_bonemeal(&mut *level, &mut event);  }  }
 /// What [`Hooks::block_step_on`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11263,8 +11263,8 @@ pub state: BlockState,
 pub context: & 'a PlacementContext,
 pub fluid: mod_api :: FluidState,
 }
-#[doc(hidden)] pub fn dispatch_state_for_placement(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, context: & PlacementContext, fluid: mod_api :: FluidState, answer: & mut Option < Option < BlockState > >) {
-if answer.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_state_for_placement(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, context: & PlacementContext, fluid: mod_api :: FluidState, answer: & mut Option < Option < BlockState > >) { 
+if answer.is_some() { return; } 
 if !super::has_part_hook(HookId::StateForPlacement) { return; } let part_table = super::parts(HookId::StateForPlacement, "state_for_placement"); let parts = part_table.for_hook(HookId::StateForPlacement).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = StateForPlacementEvent { dimension, state, context, fluid }; for part in super::entered_parts(parts, "state_for_placement") { if let Some(replacement) = part.state_for_placement(level, &mut event) { *answer = Some(replacement);  break; }  }  }
 /// What [`Hooks::enchant_effect`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -11385,7 +11385,7 @@ pub x: f32,
 pub y: f32,
 pub draw: & 'a mut dyn DrawContext,
 }
-#[doc(hidden)] pub fn dispatch_item_decorations(host: &dyn ClientHost, stack: & ItemStack, x: f32, y: f32, draw: & mut dyn DrawContext) {
+#[doc(hidden)] pub fn dispatch_item_decorations(host: &dyn ClientHost, stack: & ItemStack, x: f32, y: f32, draw: & mut dyn DrawContext) { 
 
 if !super::has_part_hook(HookId::ItemDecorations) { return; } let part_table = super::parts(HookId::ItemDecorations, "item_decorations"); let parts = part_table.for_hook(HookId::ItemDecorations).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = ItemDecorationsEvent { stack, x, y, draw }; for part in super::entered_parts(parts, "item_decorations") { part.item_decorations(host, &mut event);  }  }
 /// What [`ItemPart::use_duration`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11395,7 +11395,7 @@ pub struct UseDurationEvent<'a> {
 pub stack: & 'a ItemStack,
 pub duration: i32,
 }
-#[doc(hidden)] pub fn dispatch_use_duration(host: &dyn Host, stack: & ItemStack, duration: & mut i32) {
+#[doc(hidden)] pub fn dispatch_use_duration(host: &dyn Host, stack: & ItemStack, duration: & mut i32) { 
 
 if !super::has_part_hook(HookId::UseDuration) { return; } let part_table = super::parts(HookId::UseDuration, "use_duration"); let parts = part_table.for_hook(HookId::UseDuration).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = UseDurationEvent { stack, duration: *duration }; for part in super::entered_parts(parts, "use_duration") { part.use_duration(host, &mut event);  } *duration = event.duration; }
 /// What [`ItemPart::use_animation`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11405,7 +11405,7 @@ pub struct UseAnimationEvent<'a> {
 pub stack: & 'a ItemStack,
 pub animation: & 'a mut UseAnimation,
 }
-#[doc(hidden)] pub fn dispatch_use_animation(host: &dyn ClientHost, stack: & ItemStack, animation: & mut UseAnimation) {
+#[doc(hidden)] pub fn dispatch_use_animation(host: &dyn ClientHost, stack: & ItemStack, animation: & mut UseAnimation) { 
 
 if !super::has_part_hook(HookId::UseAnimation) { return; } let part_table = super::parts(HookId::UseAnimation, "use_animation"); let parts = part_table.for_hook(HookId::UseAnimation).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = UseAnimationEvent { stack, animation }; for part in super::entered_parts(parts, "use_animation") { part.use_animation(host, &mut event);  }  }
 /// What [`Hooks::can_eat`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11809,7 +11809,7 @@ pub stack: & 'a ItemStack,
 pub entity: Option < i32 >,
 pub remaining: i32,
 }
-#[doc(hidden)] pub fn dispatch_on_use_tick(mut host: HostSide, stack: & ItemStack, entity: Option < i32 >, remaining: i32) {
+#[doc(hidden)] pub fn dispatch_on_use_tick(mut host: HostSide, stack: & ItemStack, entity: Option < i32 >, remaining: i32) { 
 
 if !super::has_part_hook(HookId::OnUseTick) { return; } let part_table = super::parts(HookId::OnUseTick, "on_use_tick"); let parts = part_table.for_hook(HookId::OnUseTick).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = OnUseTickEvent { stack, entity, remaining }; for part in super::entered_parts(parts, "on_use_tick") { part.on_use_tick(host.reborrow(), &mut event);  }  }
 /// What [`Hooks::living_entity_use_item_stop`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -11836,7 +11836,7 @@ pub entity: Option < i32 >,
 pub time_left: i32,
 pub used: bool,
 }
-#[doc(hidden)] pub fn dispatch_release_using(mut host: HostSide, stack: & ItemStack, entity: Option < i32 >, time_left: i32, used: & mut bool) {
+#[doc(hidden)] pub fn dispatch_release_using(mut host: HostSide, stack: & ItemStack, entity: Option < i32 >, time_left: i32, used: & mut bool) { 
 
 if !super::has_part_hook(HookId::ReleaseUsing) { return; } let part_table = super::parts(HookId::ReleaseUsing, "release_using"); let parts = part_table.for_hook(HookId::ReleaseUsing).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = ReleaseUsingEvent { stack, entity, time_left, used: *used }; for part in super::entered_parts(parts, "release_using") { part.release_using(host.reborrow(), &mut event);  } *used = event.used; }
 /// What [`Hooks::loot_function`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -12746,8 +12746,8 @@ pub state: BlockState,
 pub pos: BlockPos,
 pub face: Direction,
 }
-#[doc(hidden)] pub fn dispatch_fire_odds(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, face: Direction, odds: & mut Option < (i32 , i32) >) {
-if odds.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_fire_odds(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, face: Direction, odds: & mut Option < (i32 , i32) >) { 
+if odds.is_some() { return; } 
 if !super::has_part_hook(HookId::FireOdds) { return; } let part_table = super::parts(HookId::FireOdds, "fire_odds"); let parts = part_table.for_hook(HookId::FireOdds).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = FireOddsEvent { dimension, state, pos, face }; for part in super::entered_parts(parts, "fire_odds") { if let Some(replacement) = part.fire_odds(level, &mut event) { *odds = Some(replacement);  break; }  }  }
 /// What [`BlockPart::smoke_source`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -12756,8 +12756,8 @@ pub struct SmokeSourceEvent {
 pub dimension: LevelDimension,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_smoke_source(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, smoke: & mut Option < bool >) {
-if smoke.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_smoke_source(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, smoke: & mut Option < bool >) { 
+if smoke.is_some() { return; } 
 if !super::has_part_hook(HookId::SmokeSource) { return; } let part_table = super::parts(HookId::SmokeSource, "smoke_source"); let parts = part_table.for_hook(HookId::SmokeSource).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = SmokeSourceEvent { dimension, state }; for part in super::entered_parts(parts, "smoke_source") { if let Some(replacement) = part.smoke_source(level, &mut event) { *smoke = Some(replacement);  break; }  }  }
 /// What [`Hooks::firework_explode`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -12979,8 +12979,8 @@ pub container_slots: usize,
 pub slot: usize,
 pub stack: & 'a mut mod_api :: ItemStack,
 }
-#[doc(hidden)] pub fn dispatch_menu_quick_move(host: &mut dyn ServerHost, pos: [i32 ; 3], entity: & mut ModBlockEntity, container_slots: usize, slot: usize, stack: & mut mod_api :: ItemStack, handled: & mut bool) {
-if *handled { return; }
+#[doc(hidden)] pub fn dispatch_menu_quick_move(host: &mut dyn ServerHost, pos: [i32 ; 3], entity: & mut ModBlockEntity, container_slots: usize, slot: usize, stack: & mut mod_api :: ItemStack, handled: & mut bool) { 
+if *handled { return; } 
 if !super::has_part_hook(HookId::MenuQuickMove) { return; } let part_table = super::parts(HookId::MenuQuickMove, "menu_quick_move"); let parts = part_table.for_hook(HookId::MenuQuickMove).map_or(&[][..], |table| table.block_entity_kind(|| Some(entity.id()))); if parts.is_empty() { return; } let mut event = MenuQuickMoveEvent { pos, entity: ModBlockEntityView::new(entity), container_slots, slot, stack }; for part in super::entered_parts(parts, "menu_quick_move") { if matches!(part.menu_quick_move(&mut *host, &mut event), Flow::Cancel) { *handled = true;  break; }  }  }
 /// What [`Hooks::moisture_change`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -14339,8 +14339,8 @@ pub pos: BlockPos,
 pub state: BlockState,
 pub path_type: mod_api :: PathType,
 }
-#[doc(hidden)] pub fn dispatch_adjacent_block_path_type(host: &dyn Host, pos: BlockPos, state: BlockState, path_type: mod_api :: PathType, adjacent: & mut Option < mod_api :: PathType >) {
-if adjacent.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_adjacent_block_path_type(host: &dyn Host, pos: BlockPos, state: BlockState, path_type: mod_api :: PathType, adjacent: & mut Option < mod_api :: PathType >) { 
+if adjacent.is_some() { return; } 
 if !super::has_part_hook(HookId::AdjacentBlockPathType) { return; } let part_table = super::parts(HookId::AdjacentBlockPathType, "adjacent_block_path_type"); let parts = part_table.for_hook(HookId::AdjacentBlockPathType).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = AdjacentBlockPathTypeEvent { pos, state, path_type }; for part in super::entered_parts(parts, "adjacent_block_path_type") { if let Some(replacement) = part.adjacent_block_path_type(host, &mut event) { *adjacent = Some(replacement);  break; }  }  }
 /// What [`BlockPart::affect_neighbors_after_removal`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -14352,7 +14352,7 @@ pub state: BlockState,
 pub moved: bool,
 pub updates: & 'a mut Vec < NeighbourUpdate >,
 }
-#[doc(hidden)] pub fn dispatch_affect_neighbors_after_removal(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, moved: bool, updates: & mut Vec < NeighbourUpdate >) {
+#[doc(hidden)] pub fn dispatch_affect_neighbors_after_removal(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, moved: bool, updates: & mut Vec < NeighbourUpdate >) { 
 
 if !super::has_part_hook(HookId::AffectNeighborsAfterRemoval) { return; } let part_table = super::parts(HookId::AffectNeighborsAfterRemoval, "affect_neighbors_after_removal"); let parts = part_table.for_hook(HookId::AffectNeighborsAfterRemoval).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = AffectNeighborsAfterRemovalEvent { dimension, pos, state, moved, updates }; for part in super::entered_parts(parts, "affect_neighbors_after_removal") { part.affect_neighbors_after_removal(level, &mut event);  }  }
 /// What [`Hooks::alter_ground`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14405,7 +14405,7 @@ pub stack: & 'a ItemStack,
 pub enchantments: & 'a [(std :: sync :: Arc < str > , u32)],
 pub result: & 'a mut ItemStack,
 }
-#[doc(hidden)] pub fn dispatch_apply_enchantments(host: &dyn Host, stack: & ItemStack, enchantments: & [(std :: sync :: Arc < str > , u32)], result: & mut ItemStack) {
+#[doc(hidden)] pub fn dispatch_apply_enchantments(host: &dyn Host, stack: & ItemStack, enchantments: & [(std :: sync :: Arc < str > , u32)], result: & mut ItemStack) { 
 
 if !super::has_part_hook(HookId::ApplyEnchantments) { return; } let part_table = super::parts(HookId::ApplyEnchantments, "apply_enchantments"); let parts = part_table.for_hook(HookId::ApplyEnchantments).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = ApplyEnchantmentsEvent { stack, enchantments, result }; for part in super::entered_parts(parts, "apply_enchantments") { part.apply_enchantments(host, &mut event);  }  }
 /// What [`Hooks::arm_pose_transform`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14487,7 +14487,7 @@ pub pos: BlockPos,
 pub beacon_pos: BlockPos,
 pub color: & 'a mut Option < u32 >,
 }
-#[doc(hidden)] pub fn dispatch_beacon_color_multiplier(host: &dyn Host, state: BlockState, pos: BlockPos, beacon_pos: BlockPos, color: & mut Option < u32 >) {
+#[doc(hidden)] pub fn dispatch_beacon_color_multiplier(host: &dyn Host, state: BlockState, pos: BlockPos, beacon_pos: BlockPos, color: & mut Option < u32 >) { 
 
 if !super::has_part_hook(HookId::BeaconColorMultiplier) { return; } let part_table = super::parts(HookId::BeaconColorMultiplier, "beacon_color_multiplier"); let parts = part_table.for_hook(HookId::BeaconColorMultiplier).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = BeaconColorMultiplierEvent { state, pos, beacon_pos, color }; for part in super::entered_parts(parts, "beacon_color_multiplier") { part.beacon_color_multiplier(host, &mut event);  }  }
 /// What [`Hooks::block_drops`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14520,7 +14520,7 @@ pub block_entity: BlockEntityRef,
 pub state: BlockState,
 pub entity: & 'a ModBlockEntity,
 }
-#[doc(hidden)] pub fn dispatch_block_entity_client_tick(host: &mut dyn ClientHost, pos: [i32 ; 3], block_entity: BlockEntityRef, state: BlockState, entity: & ModBlockEntity) {
+#[doc(hidden)] pub fn dispatch_block_entity_client_tick(host: &mut dyn ClientHost, pos: [i32 ; 3], block_entity: BlockEntityRef, state: BlockState, entity: & ModBlockEntity) { 
 
 if !super::has_part_hook(HookId::BlockEntityClientTick) { return; } let part_table = super::parts(HookId::BlockEntityClientTick, "block_entity_client_tick"); let parts = part_table.for_hook(HookId::BlockEntityClientTick).map_or(&[][..], |table| table.block_entity_kind(|| Some(entity.id()))); if parts.is_empty() { return; } let mut event = BlockEntityClientTickEvent { pos, block_entity, state, entity }; for part in super::entered_parts(parts, "block_entity_client_tick") { part.block_entity_client_tick(&mut *host, &mut event);  }  }
 /// What [`BlockEntityPart::block_entity_client_ticks`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14530,7 +14530,7 @@ pub struct BlockEntityClientTicksEvent<'a> {
 pub block: & 'a str,
 pub ticks: bool,
 }
-#[doc(hidden)] pub fn dispatch_block_entity_client_ticks(host: &dyn ClientHost, block: & str, ticks: & mut bool) {
+#[doc(hidden)] pub fn dispatch_block_entity_client_ticks(host: &dyn ClientHost, block: & str, ticks: & mut bool) { 
 
 if !super::has_part_hook(HookId::BlockEntityClientTicks) { return; } let part_table = super::parts(HookId::BlockEntityClientTicks, "block_entity_client_ticks"); let parts = part_table.for_hook(HookId::BlockEntityClientTicks).map_or(&[][..], |table| table.block_entity(|| Some(block))); if parts.is_empty() { return; } let mut event = BlockEntityClientTicksEvent { block, ticks: *ticks }; for part in super::entered_parts(parts, "block_entity_client_ticks") { part.block_entity_client_ticks(host, &mut event);  } *ticks = event.ticks; }
 /// What [`BlockEntityPart::block_entity_data_received`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14541,7 +14541,7 @@ pub entity: BlockEntityRef,
 pub source: BlockEntityDataSource,
 pub tag: & 'a horizon_core :: nbt :: Compound,
 }
-#[doc(hidden)] pub fn dispatch_block_entity_data_received(host: &dyn ClientHost, entity: BlockEntityRef, source: BlockEntityDataSource, tag: & horizon_core :: nbt :: Compound) {
+#[doc(hidden)] pub fn dispatch_block_entity_data_received(host: &dyn ClientHost, entity: BlockEntityRef, source: BlockEntityDataSource, tag: & horizon_core :: nbt :: Compound) { 
 
 if !super::has_part_hook(HookId::BlockEntityDataReceived) { return; } let part_table = super::parts(HookId::BlockEntityDataReceived, "block_entity_data_received"); let parts = part_table.for_hook(HookId::BlockEntityDataReceived).map_or(&[][..], |table| table.block_entity_kind(|| entity.kind(host).and_then(super::content::registry_keys::block_entity_type_name))); if parts.is_empty() { return; } let mut event = BlockEntityDataReceivedEvent { entity, source, tag }; for part in super::entered_parts(parts, "block_entity_data_received") { part.block_entity_data_received(host, &mut event);  }  }
 /// What [`BlockEntityPart::block_entity_on_load`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14571,7 +14571,7 @@ pub struct BlockEntityViewDistanceEvent<'a> {
 pub block: & 'a str,
 pub distance: f64,
 }
-#[doc(hidden)] pub fn dispatch_block_entity_view_distance(host: &dyn ClientHost, block: & str, distance: & mut f64) {
+#[doc(hidden)] pub fn dispatch_block_entity_view_distance(host: &dyn ClientHost, block: & str, distance: & mut f64) { 
 
 if !super::has_part_hook(HookId::BlockEntityViewDistance) { return; } let part_table = super::parts(HookId::BlockEntityViewDistance, "block_entity_view_distance"); let parts = part_table.for_hook(HookId::BlockEntityViewDistance).map_or(&[][..], |table| table.block_entity(|| Some(block))); if parts.is_empty() { return; } let mut event = BlockEntityViewDistanceEvent { block, distance: *distance }; for part in super::entered_parts(parts, "block_entity_view_distance") { part.block_entity_view_distance(host, &mut event);  } *distance = event.distance; }
 /// What [`BlockPart::block_jump_factor`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14581,7 +14581,7 @@ pub struct BlockJumpFactorEvent {
 pub state: BlockState,
 pub factor: f32,
 }
-#[doc(hidden)] pub fn dispatch_block_jump_factor(context: &dyn LoopContext, state: BlockState, factor: & mut f32) {
+#[doc(hidden)] pub fn dispatch_block_jump_factor(context: &dyn LoopContext, state: BlockState, factor: & mut f32) { 
 
 if !super::has_part_hook(HookId::BlockJumpFactor) { return; } let part_table = super::parts(HookId::BlockJumpFactor, "block_jump_factor"); let parts = part_table.for_hook(HookId::BlockJumpFactor).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = BlockJumpFactorEvent { state, factor: *factor }; for part in super::entered_parts(parts, "block_jump_factor") { part.block_jump_factor(context, &mut event);  } *factor = event.factor; }
 /// What [`BlockPart::block_speed_factor`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14591,7 +14591,7 @@ pub struct BlockSpeedFactorEvent {
 pub state: BlockState,
 pub factor: f32,
 }
-#[doc(hidden)] pub fn dispatch_block_speed_factor(context: &dyn LoopContext, state: BlockState, factor: & mut f32) {
+#[doc(hidden)] pub fn dispatch_block_speed_factor(context: &dyn LoopContext, state: BlockState, factor: & mut f32) { 
 
 if !super::has_part_hook(HookId::BlockSpeedFactor) { return; } let part_table = super::parts(HookId::BlockSpeedFactor, "block_speed_factor"); let parts = part_table.for_hook(HookId::BlockSpeedFactor).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = BlockSpeedFactorEvent { state, factor: *factor }; for part in super::entered_parts(parts, "block_speed_factor") { part.block_speed_factor(context, &mut event);  } *factor = event.factor; }
 /// What [`Hooks::block_grow_feature`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14648,8 +14648,8 @@ pub struct BlockPathTypeEvent {
 pub pos: BlockPos,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_block_path_type(host: &dyn Host, pos: BlockPos, state: BlockState, path_type: & mut Option < mod_api :: PathType >) {
-if path_type.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_block_path_type(host: &dyn Host, pos: BlockPos, state: BlockState, path_type: & mut Option < mod_api :: PathType >) { 
+if path_type.is_some() { return; } 
 if !super::has_part_hook(HookId::BlockPathType) { return; } let part_table = super::parts(HookId::BlockPathType, "block_path_type"); let parts = part_table.for_hook(HookId::BlockPathType).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = BlockPathTypeEvent { pos, state }; for part in super::entered_parts(parts, "block_path_type") { if let Some(replacement) = part.block_path_type(host, &mut event) { *path_type = Some(replacement);  break; }  }  }
 /// What [`BlockPart::block_render_visibility`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -14658,7 +14658,7 @@ pub struct BlockRenderVisibilityEvent {
 pub state: BlockState,
 pub hidden: bool,
 }
-#[doc(hidden)] pub fn dispatch_block_render_visibility(host: &dyn ClientHost, state: BlockState, hidden: & mut bool) {
+#[doc(hidden)] pub fn dispatch_block_render_visibility(host: &dyn ClientHost, state: BlockState, hidden: & mut bool) { 
 
 if !super::has_part_hook(HookId::BlockRenderVisibility) { return; } let part_table = super::parts(HookId::BlockRenderVisibility, "block_render_visibility"); let parts = part_table.for_hook(HookId::BlockRenderVisibility).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = BlockRenderVisibilityEvent { state, hidden: *hidden }; for part in super::entered_parts(parts, "block_render_visibility") { part.block_render_visibility(host, &mut event);  } *hidden = event.hidden; }
 /// What [`Hooks::block_screen_effect_draw`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14684,7 +14684,7 @@ pub dimension: LevelDimension,
 pub state: BlockState,
 pub slime: bool,
 }
-#[doc(hidden)] pub fn dispatch_is_slime_block(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, slime: & mut bool) {
+#[doc(hidden)] pub fn dispatch_is_slime_block(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, slime: & mut bool) { 
 
 if !super::has_part_hook(HookId::IsSlimeBlock) { return; } let part_table = super::parts(HookId::IsSlimeBlock, "is_slime_block"); let parts = part_table.for_hook(HookId::IsSlimeBlock).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = IsSlimeBlockEvent { dimension, state, slime: *slime }; for part in super::entered_parts(parts, "is_slime_block") { part.is_slime_block(level, &mut event);  } *slime = event.slime; }
 /// What [`BlockPart::is_sticky_block`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14695,7 +14695,7 @@ pub dimension: LevelDimension,
 pub state: BlockState,
 pub sticky: bool,
 }
-#[doc(hidden)] pub fn dispatch_is_sticky_block(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, sticky: & mut bool) {
+#[doc(hidden)] pub fn dispatch_is_sticky_block(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, sticky: & mut bool) { 
 
 if !super::has_part_hook(HookId::IsStickyBlock) { return; } let part_table = super::parts(HookId::IsStickyBlock, "is_sticky_block"); let parts = part_table.for_hook(HookId::IsStickyBlock).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = IsStickyBlockEvent { dimension, state, sticky: *sticky }; for part in super::entered_parts(parts, "is_sticky_block") { part.is_sticky_block(level, &mut event);  } *sticky = event.sticky; }
 /// What [`BlockPart::can_stick_to`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14707,7 +14707,7 @@ pub state: BlockState,
 pub other: BlockState,
 pub sticks: bool,
 }
-#[doc(hidden)] pub fn dispatch_can_stick_to(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, other: BlockState, sticks: & mut bool) {
+#[doc(hidden)] pub fn dispatch_can_stick_to(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, other: BlockState, sticks: & mut bool) { 
 
 if !super::has_part_hook(HookId::CanStickTo) { return; } let part_table = super::parts(HookId::CanStickTo, "can_stick_to"); let parts = part_table.for_hook(HookId::CanStickTo).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = CanStickToEvent { dimension, state, other, sticks: *sticks }; for part in super::entered_parts(parts, "can_stick_to") { part.can_stick_to(level, &mut event);  } *sticks = event.sticks; }
 /// What [`Hooks::block_tool_modification`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14731,8 +14731,8 @@ pub struct UseItemOnEvent<'a> {
 pub state: BlockState,
 pub click: & 'a BlockClick < 'a >,
 }
-#[doc(hidden)] pub fn dispatch_use_item_on(host: &mut dyn ServerHost, state: BlockState, click: & BlockClick < '_ >, answer: & mut Option < mod_api :: InteractionResult >) {
-if answer.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_use_item_on(host: &mut dyn ServerHost, state: BlockState, click: & BlockClick < '_ >, answer: & mut Option < mod_api :: InteractionResult >) { 
+if answer.is_some() { return; } 
 if !super::has_part_hook(HookId::UseItemOn) { return; } let part_table = super::parts(HookId::UseItemOn, "use_item_on"); let parts = part_table.for_hook(HookId::UseItemOn).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = UseItemOnEvent { state, click }; for part in super::entered_parts(parts, "use_item_on") { if let Some(replacement) = part.use_item_on(&mut *host, &mut event) { *answer = Some(replacement);  break; }  }  }
 /// What [`BlockPart::use_without_item`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -14741,8 +14741,8 @@ pub struct UseWithoutItemEvent<'a> {
 pub state: BlockState,
 pub click: & 'a BlockClick < 'a >,
 }
-#[doc(hidden)] pub fn dispatch_use_without_item(host: &mut dyn ServerHost, state: BlockState, click: & BlockClick < '_ >, answer: & mut Option < mod_api :: InteractionResult >) {
-if answer.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_use_without_item(host: &mut dyn ServerHost, state: BlockState, click: & BlockClick < '_ >, answer: & mut Option < mod_api :: InteractionResult >) { 
+if answer.is_some() { return; } 
 if !super::has_part_hook(HookId::UseWithoutItem) { return; } let part_table = super::parts(HookId::UseWithoutItem, "use_without_item"); let parts = part_table.for_hook(HookId::UseWithoutItem).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = UseWithoutItemEvent { state, click }; for part in super::entered_parts(parts, "use_without_item") { if let Some(replacement) = part.use_without_item(&mut *host, &mut event) { *answer = Some(replacement);  break; }  }  }
 /// What [`Hooks::bonemeal`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -14775,7 +14775,7 @@ pub state: BlockState,
 pub pos: BlockPos,
 pub factor: f32,
 }
-#[doc(hidden)] pub fn dispatch_bounce_restitution(mut level: LevelSide, entity: i32, kind: & str, state: BlockState, pos: BlockPos, factor: & mut f32) {
+#[doc(hidden)] pub fn dispatch_bounce_restitution(mut level: LevelSide, entity: i32, kind: & str, state: BlockState, pos: BlockPos, factor: & mut f32) { 
 
 if !super::has_part_hook(HookId::BounceRestitution) { return; } let part_table = super::parts(HookId::BounceRestitution, "bounce_restitution"); let parts = part_table.for_hook(HookId::BounceRestitution).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = BounceRestitutionEvent { entity, kind, state, pos, factor: *factor }; for part in super::entered_parts(parts, "bounce_restitution") { part.bounce_restitution(level.reborrow(), &mut event);  } *factor = event.factor; }
 /// What [`Hooks::build_creative_mode_tab_contents`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14851,7 +14851,7 @@ pub face_solid: bool,
 }
 #[doc(hidden)] pub fn dispatch_can_be_connected_to(level: &dyn LevelHost, call: calls::CanBeConnectedToCall<'_>) { let calls::CanBeConnectedToCall { dimension, pos, state, connector, kind, direction, face_solid, answer } = call;
 
-if answer.is_some() { return; }
+if answer.is_some() { return; } 
 if !super::has_part_hook(HookId::CanBeConnectedTo) { return; } let part_table = super::parts(HookId::CanBeConnectedTo, "can_be_connected_to"); let parts = part_table.for_hook(HookId::CanBeConnectedTo).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = CanBeConnectedToEvent { dimension, pos, state, connector, kind, direction, face_solid }; for part in super::entered_parts(parts, "can_be_connected_to") { if let Some(replacement) = part.can_be_connected_to(level, &mut event) { *answer = Some(replacement);  break; }  }  }
 /// What [`BlockPart::can_be_hydrated`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -14863,8 +14863,8 @@ pub pos: BlockPos,
 pub fluid: mod_api :: FluidState,
 pub fluid_pos: BlockPos,
 }
-#[doc(hidden)] pub fn dispatch_can_be_hydrated(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, fluid: mod_api :: FluidState, fluid_pos: BlockPos, hydrates: & mut Option < bool >) {
-if hydrates.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_can_be_hydrated(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, fluid: mod_api :: FluidState, fluid_pos: BlockPos, hydrates: & mut Option < bool >) { 
+if hydrates.is_some() { return; } 
 if !super::has_part_hook(HookId::CanBeHydrated) { return; } let part_table = super::parts(HookId::CanBeHydrated, "can_be_hydrated"); let parts = part_table.for_hook(HookId::CanBeHydrated).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = CanBeHydratedEvent { dimension, state, pos, fluid, fluid_pos }; for part in super::entered_parts(parts, "can_be_hydrated") { if let Some(replacement) = part.can_be_hydrated(level, &mut event) { *hydrates = Some(replacement);  break; }  }  }
 /// What [`Hooks::can_continue_sleeping`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -14886,8 +14886,8 @@ pub pos: BlockPos,
 pub state: BlockState,
 pub explosion: & 'a ExplosionStart < 'a >,
 }
-#[doc(hidden)] pub fn dispatch_can_drop_from_explosion(level: &dyn LevelHost, pos: BlockPos, state: BlockState, explosion: & ExplosionStart < '_ >, drops: & mut Option < bool >) {
-if drops.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_can_drop_from_explosion(level: &dyn LevelHost, pos: BlockPos, state: BlockState, explosion: & ExplosionStart < '_ >, drops: & mut Option < bool >) { 
+if drops.is_some() { return; } 
 if !super::has_part_hook(HookId::CanDropFromExplosion) { return; } let part_table = super::parts(HookId::CanDropFromExplosion, "can_drop_from_explosion"); let parts = part_table.for_hook(HookId::CanDropFromExplosion).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = CanDropFromExplosionEvent { pos, state, explosion }; for part in super::entered_parts(parts, "can_drop_from_explosion") { if let Some(replacement) = part.can_drop_from_explosion(level, &mut event) { *drops = Some(replacement);  break; }  }  }
 /// What [`BlockPart::can_entity_destroy`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -14897,8 +14897,8 @@ pub pos: BlockPos,
 pub state: BlockState,
 pub entity: EntityRef,
 }
-#[doc(hidden)] pub fn dispatch_can_entity_destroy(host: &dyn Host, pos: BlockPos, state: BlockState, entity: EntityRef, may_destroy: & mut Option < bool >) {
-if may_destroy.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_can_entity_destroy(host: &dyn Host, pos: BlockPos, state: BlockState, entity: EntityRef, may_destroy: & mut Option < bool >) { 
+if may_destroy.is_some() { return; } 
 if !super::has_part_hook(HookId::CanEntityDestroy) { return; } let part_table = super::parts(HookId::CanEntityDestroy, "can_entity_destroy"); let parts = part_table.for_hook(HookId::CanEntityDestroy).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = CanEntityDestroyEvent { pos, state, entity }; for part in super::entered_parts(parts, "can_entity_destroy") { if let Some(replacement) = part.can_entity_destroy(host, &mut event) { *may_destroy = Some(replacement);  break; }  }  }
 /// What [`ItemPart::can_equip`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -14910,7 +14910,7 @@ pub entity: LivingRef,
 pub kind: & 'a str,
 pub can_equip: bool,
 }
-#[doc(hidden)] pub fn dispatch_can_equip(host: &dyn Host, stack: & mod_api :: ItemStack, slot: & str, entity: LivingRef, kind: & str, can_equip: & mut bool) {
+#[doc(hidden)] pub fn dispatch_can_equip(host: &dyn Host, stack: & mod_api :: ItemStack, slot: & str, entity: LivingRef, kind: & str, can_equip: & mut bool) { 
 
 if !super::has_part_hook(HookId::CanEquip) { return; } let part_table = super::parts(HookId::CanEquip, "can_equip"); let parts = part_table.for_hook(HookId::CanEquip).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = CanEquipEvent { stack, slot, entity, kind, can_equip: *can_equip }; for part in super::entered_parts(parts, "can_equip") { part.can_equip(host, &mut event);  } *can_equip = event.can_equip; }
 /// What [`ItemPart::can_fit_inside_container_items`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14920,7 +14920,7 @@ pub struct CanFitInsideContainerItemsEvent<'a> {
 pub stack: & 'a mod_api :: ItemStack,
 pub fits: bool,
 }
-#[doc(hidden)] pub fn dispatch_can_fit_inside_container_items(context: &dyn LoopContext, stack: & mod_api :: ItemStack, fits: & mut bool) {
+#[doc(hidden)] pub fn dispatch_can_fit_inside_container_items(context: &dyn LoopContext, stack: & mod_api :: ItemStack, fits: & mut bool) { 
 
 if !super::has_part_hook(HookId::CanFitInsideContainerItems) { return; } let part_table = super::parts(HookId::CanFitInsideContainerItems, "can_fit_inside_container_items"); let parts = part_table.for_hook(HookId::CanFitInsideContainerItems).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = CanFitInsideContainerItemsEvent { stack, fits: *fits }; for part in super::entered_parts(parts, "can_fit_inside_container_items") { part.can_fit_inside_container_items(context, &mut event);  } *fits = event.fits; }
 /// What [`ItemPart::can_grindstone_repair`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14930,7 +14930,7 @@ pub struct CanGrindstoneRepairEvent<'a> {
 pub stack: & 'a mod_api :: ItemStack,
 pub can_repair: bool,
 }
-#[doc(hidden)] pub fn dispatch_can_grindstone_repair(context: &dyn LoopContext, stack: & mod_api :: ItemStack, can_repair: & mut bool) {
+#[doc(hidden)] pub fn dispatch_can_grindstone_repair(context: &dyn LoopContext, stack: & mod_api :: ItemStack, can_repair: & mut bool) { 
 
 if !super::has_part_hook(HookId::CanGrindstoneRepair) { return; } let part_table = super::parts(HookId::CanGrindstoneRepair, "can_grindstone_repair"); let parts = part_table.for_hook(HookId::CanGrindstoneRepair).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = CanGrindstoneRepairEvent { stack, can_repair: *can_repair }; for part in super::entered_parts(parts, "can_grindstone_repair") { part.can_grindstone_repair(context, &mut event);  } *can_repair = event.can_repair; }
 /// What [`BlockPart::can_harvest_block`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14942,7 +14942,7 @@ pub pos: [i32 ; 3],
 pub state: BlockState,
 pub can_harvest: bool,
 }
-#[doc(hidden)] pub fn dispatch_can_harvest_block(mut host: HostSide, player: u32, pos: [i32 ; 3], state: BlockState, can_harvest: & mut bool) {
+#[doc(hidden)] pub fn dispatch_can_harvest_block(mut host: HostSide, player: u32, pos: [i32 ; 3], state: BlockState, can_harvest: & mut bool) { 
 
 if !super::has_part_hook(HookId::CanHarvestBlock) { return; } let part_table = super::parts(HookId::CanHarvestBlock, "can_harvest_block"); let parts = part_table.for_hook(HookId::CanHarvestBlock).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = CanHarvestBlockEvent { player, pos, state, can_harvest: *can_harvest }; for part in super::entered_parts(parts, "can_harvest_block") { part.can_harvest_block(host.reborrow(), &mut event);  } *can_harvest = event.can_harvest; }
 /// What [`ItemPart::can_perform_action`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14953,7 +14953,7 @@ pub stack: & 'a ItemStack,
 pub ability: & 'a str,
 pub can_perform: bool,
 }
-#[doc(hidden)] pub fn dispatch_can_perform_action(host: &dyn Host, stack: & ItemStack, ability: & str, can_perform: & mut bool) {
+#[doc(hidden)] pub fn dispatch_can_perform_action(host: &dyn Host, stack: & ItemStack, ability: & str, can_perform: & mut bool) { 
 
 if !super::has_part_hook(HookId::CanPerformAction) { return; } let part_table = super::parts(HookId::CanPerformAction, "can_perform_action"); let parts = part_table.for_hook(HookId::CanPerformAction).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = CanPerformActionEvent { stack, ability, can_perform: *can_perform }; for part in super::entered_parts(parts, "can_perform_action") { part.can_perform_action(host, &mut event);  } *can_perform = event.can_perform; }
 /// What [`Hooks::can_player_sleep`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -14975,8 +14975,8 @@ pub state: BlockState,
 pub ground: BlockState,
 pub ground_pos: BlockPos,
 }
-#[doc(hidden)] pub fn dispatch_can_sustain_plant_v2(context: &dyn WorldgenHost, state: BlockState, ground: BlockState, ground_pos: BlockPos, sustains: & mut Option < bool >) {
-if sustains.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_can_sustain_plant_v2(context: &dyn WorldgenHost, state: BlockState, ground: BlockState, ground_pos: BlockPos, sustains: & mut Option < bool >) { 
+if sustains.is_some() { return; } 
 if !super::has_part_hook(HookId::CanSustainPlantV2) { return; } let part_table = super::worldgen_parts(); let parts = part_table.for_hook(HookId::CanSustainPlantV2).map_or(&[][..], |table| table.block_value(ground)); if parts.is_empty() { return; } let mut event = CanSustainPlantV2Event { state, ground, ground_pos }; for part in super::entered_parts(parts, "can_sustain_plant_v2") { if let Some(replacement) = part.can_sustain_plant_v2(context, &mut event) { *sustains = Some(replacement);  break; }  }  }
 /// What [`BlockPart::can_sustain_plant`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -14987,8 +14987,8 @@ pub state: BlockState,
 pub ground: BlockState,
 pub ground_pos: BlockPos,
 }
-#[doc(hidden)] pub fn dispatch_can_sustain_plant(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, ground: BlockState, ground_pos: BlockPos, sustains: & mut Option < bool >) {
-if sustains.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_can_sustain_plant(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, ground: BlockState, ground_pos: BlockPos, sustains: & mut Option < bool >) { 
+if sustains.is_some() { return; } 
 if !super::has_part_hook(HookId::CanSustainPlant) { return; } let part_table = super::parts(HookId::CanSustainPlant, "can_sustain_plant"); let parts = part_table.for_hook(HookId::CanSustainPlant).map_or(&[][..], |table| table.block_value(ground)); if parts.is_empty() { return; } let mut event = CanSustainPlantEvent { dimension, state, ground, ground_pos }; for part in super::entered_parts(parts, "can_sustain_plant") { if let Some(replacement) = part.can_sustain_plant(level, &mut event) { *sustains = Some(replacement);  break; }  }  }
 /// What [`Hooks::chat_recipient`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -15282,8 +15282,8 @@ pub block: & 'a str,
 pub state: BlockState,
 pub include_data: bool,
 }
-#[doc(hidden)] pub fn dispatch_clone_item_stack(host: &dyn Host, dimension: LevelDimension, pos: BlockPos, block: & str, state: BlockState, include_data: bool, stack: & mut Option < ItemStack >) {
-if stack.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_clone_item_stack(host: &dyn Host, dimension: LevelDimension, pos: BlockPos, block: & str, state: BlockState, include_data: bool, stack: & mut Option < ItemStack >) { 
+if stack.is_some() { return; } 
 if !super::has_part_hook(HookId::CloneItemStack) { return; } let part_table = super::parts(HookId::CloneItemStack, "clone_item_stack"); let parts = part_table.for_hook(HookId::CloneItemStack).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = CloneItemStackEvent { dimension, pos, block, state, include_data }; for part in super::entered_parts(parts, "clone_item_stack") { if let Some(replacement) = part.clone_item_stack(host, &mut event) { *stack = Some(replacement);  break; }  }  }
 /// What [`Hooks::component_hover`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -15345,7 +15345,7 @@ pub struct ContainedFluidEvent<'a> {
 pub stack: & 'a mod_api :: ItemStack,
 pub fluid: & 'a mut Option < mod_api :: FluidKey >,
 }
-#[doc(hidden)] pub fn dispatch_contained_fluid(host: &dyn ClientHost, stack: & mod_api :: ItemStack, fluid: & mut Option < mod_api :: FluidKey >) {
+#[doc(hidden)] pub fn dispatch_contained_fluid(host: &dyn ClientHost, stack: & mod_api :: ItemStack, fluid: & mut Option < mod_api :: FluidKey >) { 
 
 if !super::has_part_hook(HookId::ContainedFluid) { return; } let part_table = super::parts(HookId::ContainedFluid, "contained_fluid"); let parts = part_table.for_hook(HookId::ContainedFluid).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = ContainedFluidEvent { stack, fluid }; for part in super::entered_parts(parts, "contained_fluid") { part.contained_fluid(host, &mut event);  }  }
 /// What [`BlockPart::contents_changed`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -15356,7 +15356,7 @@ pub level: LevelRef,
 pub pos: BlockPos,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_contents_changed(host: &mut dyn ServerHost, level: LevelRef, pos: BlockPos, state: BlockState) {
+#[doc(hidden)] pub fn dispatch_contents_changed(host: &mut dyn ServerHost, level: LevelRef, pos: BlockPos, state: BlockState) { 
 
 if !super::has_part_hook(HookId::ContentsChanged) { return; } let part_table = super::parts(HookId::ContentsChanged, "contents_changed"); let parts = part_table.for_hook(HookId::ContentsChanged).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = ContentsChangedEvent { level, pos, state }; for part in super::entered_parts(parts, "contents_changed") { part.contents_changed(&mut *host, &mut event);  }  }
 /// What [`ItemPart::crafting_remainder`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -15366,7 +15366,7 @@ pub struct CraftingRemainderEvent<'a> {
 pub stack: & 'a ItemStack,
 pub remainder: & 'a mut Option < ItemStack >,
 }
-#[doc(hidden)] pub fn dispatch_crafting_remainder(host: &dyn Host, stack: & ItemStack, remainder: & mut Option < ItemStack >) {
+#[doc(hidden)] pub fn dispatch_crafting_remainder(host: &dyn Host, stack: & ItemStack, remainder: & mut Option < ItemStack >) { 
 
 if !super::has_part_hook(HookId::CraftingRemainder) { return; } let part_table = super::parts(HookId::CraftingRemainder, "crafting_remainder"); let parts = part_table.for_hook(HookId::CraftingRemainder).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = CraftingRemainderEvent { stack, remainder }; for part in super::entered_parts(parts, "crafting_remainder") { part.crafting_remainder(host, &mut event);  }  }
 /// What [`Hooks::create_fluid_source`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -15408,7 +15408,7 @@ pub struct CreatorModIdEvent<'a> {
 pub stack: & 'a ItemStack,
 pub mod_id: & 'a mut Option < String >,
 }
-#[doc(hidden)] pub fn dispatch_creator_mod_id(host: &dyn Host, stack: & ItemStack, mod_id: & mut Option < String >) {
+#[doc(hidden)] pub fn dispatch_creator_mod_id(host: &dyn Host, stack: & ItemStack, mod_id: & mut Option < String >) { 
 
 if !super::has_part_hook(HookId::CreatorModId) { return; } let part_table = super::parts(HookId::CreatorModId, "creator_mod_id"); let parts = part_table.for_hook(HookId::CreatorModId).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = CreatorModIdEvent { stack, mod_id }; for part in super::entered_parts(parts, "creator_mod_id") { part.creator_mod_id(host, &mut event);  }  }
 /// What [`Hooks::crop_grow_pre`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -15504,8 +15504,8 @@ pub entity: Option < LivingRef >,
 pub amount: i32,
 pub break_now: bool,
 }
-#[doc(hidden)] pub fn dispatch_damage_item(host: &mut dyn ServerHost, stack: & ItemStack, entity: Option < LivingRef >, amount: & mut i32, break_now: & mut bool, canceled: & mut bool) {
-if *canceled { return; }
+#[doc(hidden)] pub fn dispatch_damage_item(host: &mut dyn ServerHost, stack: & ItemStack, entity: Option < LivingRef >, amount: & mut i32, break_now: & mut bool, canceled: & mut bool) { 
+if *canceled { return; } 
 if !super::has_part_hook(HookId::DamageItem) { return; } let part_table = super::parts(HookId::DamageItem, "damage_item"); let parts = part_table.for_hook(HookId::DamageItem).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = DamageItemEvent { stack, entity, amount: *amount, break_now: *break_now }; for part in super::entered_parts(parts, "damage_item") { if matches!(part.damage_item(&mut *host, &mut event), Flow::Cancel) { *canceled = true;  break; }  } *amount = event.amount;*break_now = event.break_now; }
 /// What [`Hooks::data_maps_updated`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -15564,8 +15564,8 @@ pub facing: Direction,
 pub state: BlockState,
 pub stack: & 'a ItemStack,
 }
-#[doc(hidden)] pub fn dispatch_dispense_method(host: &mut dyn ServerHost, dimension: & str, pos: [i32 ; 3], facing: Direction, state: BlockState, stack: & ItemStack, answer: & mut Option < mod_api :: Dispensed >) {
-if answer.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_dispense_method(host: &mut dyn ServerHost, dimension: & str, pos: [i32 ; 3], facing: Direction, state: BlockState, stack: & ItemStack, answer: & mut Option < mod_api :: Dispensed >) { 
+if answer.is_some() { return; } 
 if !super::has_part_hook(HookId::DispenseMethod) { return; } let part_table = super::parts(HookId::DispenseMethod, "dispense_method"); let parts = part_table.for_hook(HookId::DispenseMethod).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = DispenseMethodEvent { dimension, pos, facing, state, stack }; for part in super::entered_parts(parts, "dispense_method") { if let Some(replacement) = part.dispense_method(&mut *host, &mut event) { *answer = Some(replacement);  break; }  }  }
 /// What [`Hooks::dispenser_acts`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -15610,8 +15610,8 @@ pub pos: BlockPos,
 pub hit: Option < (BlockPos , Direction) >,
 pub stack: & 'a ItemStack,
 }
-#[doc(hidden)] pub fn dispatch_empty_contents(host: &mut dyn ServerHost, player: Option < PlayerRef >, pos: BlockPos, hit: Option < (BlockPos , Direction) >, stack: & ItemStack, answer: & mut Option < bool >) {
-if answer.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_empty_contents(host: &mut dyn ServerHost, player: Option < PlayerRef >, pos: BlockPos, hit: Option < (BlockPos , Direction) >, stack: & ItemStack, answer: & mut Option < bool >) { 
+if answer.is_some() { return; } 
 if !super::has_part_hook(HookId::EmptyContents) { return; } let part_table = super::parts(HookId::EmptyContents, "empty_contents"); let parts = part_table.for_hook(HookId::EmptyContents).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = EmptyContentsEvent { player, pos, hit, stack }; for part in super::entered_parts(parts, "empty_contents") { if let Some(replacement) = part.empty_contents(&mut *host, &mut event) { *answer = Some(replacement);  break; }  }  }
 /// What [`BlockPart::enchant_power_bonus`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -15622,7 +15622,7 @@ pub pos: BlockPos,
 pub table_pos: BlockPos,
 pub power: f32,
 }
-#[doc(hidden)] pub fn dispatch_enchant_power_bonus(host: &dyn Host, state: BlockState, pos: BlockPos, table_pos: BlockPos, power: & mut f32) {
+#[doc(hidden)] pub fn dispatch_enchant_power_bonus(host: &dyn Host, state: BlockState, pos: BlockPos, table_pos: BlockPos, power: & mut f32) { 
 
 if !super::has_part_hook(HookId::EnchantPowerBonus) { return; } let part_table = super::parts(HookId::EnchantPowerBonus, "enchant_power_bonus"); let parts = part_table.for_hook(HookId::EnchantPowerBonus).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = EnchantPowerBonusEvent { state, pos, table_pos, power: *power }; for part in super::entered_parts(parts, "enchant_power_bonus") { part.enchant_power_bonus(host, &mut event);  } *power = event.power; }
 /// What [`Hooks::enchanted_block_loot`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -15873,7 +15873,7 @@ pub tool: Option < & 'a ItemStack >,
 }
 #[doc(hidden)] pub fn dispatch_exp_drop(level: &dyn LevelHost, call: calls::ExpDropCall<'_>) { let calls::ExpDropCall { dimension, pos, state, block_entity, breaker, tool, experience } = call;
 
-if experience.is_some() { return; }
+if experience.is_some() { return; } 
 if !super::has_part_hook(HookId::ExpDrop) { return; } let part_table = super::parts(HookId::ExpDrop, "exp_drop"); let parts = part_table.for_hook(HookId::ExpDrop).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = ExpDropEvent { dimension, pos, state, block_entity, breaker, tool }; for part in super::entered_parts(parts, "exp_drop") { if let Some(replacement) = part.exp_drop(level, &mut event) { *experience = Some(replacement);  break; }  }  }
 /// What [`Hooks::explosion_knockback`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -15895,8 +15895,8 @@ pub pos: BlockPos,
 pub state: BlockState,
 pub explosion: & 'a ExplosionStart < 'a >,
 }
-#[doc(hidden)] pub fn dispatch_explosion_resistance(level: &dyn LevelHost, pos: BlockPos, state: BlockState, explosion: & ExplosionStart < '_ >, resistance: & mut Option < f32 >) {
-if resistance.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_explosion_resistance(level: &dyn LevelHost, pos: BlockPos, state: BlockState, explosion: & ExplosionStart < '_ >, resistance: & mut Option < f32 >) { 
+if resistance.is_some() { return; } 
 if !super::has_part_hook(HookId::ExplosionResistance) { return; } let part_table = super::parts(HookId::ExplosionResistance, "explosion_resistance"); let parts = part_table.for_hook(HookId::ExplosionResistance).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = ExplosionResistanceEvent { pos, state, explosion }; for part in super::entered_parts(parts, "explosion_resistance") { if let Some(replacement) = part.explosion_resistance(level, &mut event) { *resistance = Some(replacement);  break; }  }  }
 /// What [`Hooks::explosion_start`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -15952,7 +15952,7 @@ pub state: BlockState,
 pub pos: BlockPos,
 pub entity: EntityRef,
 }
-#[doc(hidden)] pub fn dispatch_falling_tick(host: &mut dyn ServerHost, state: BlockState, pos: BlockPos, entity: EntityRef) {
+#[doc(hidden)] pub fn dispatch_falling_tick(host: &mut dyn ServerHost, state: BlockState, pos: BlockPos, entity: EntityRef) { 
 
 if !super::has_part_hook(HookId::FallingTick) { return; } let part_table = super::parts(HookId::FallingTick, "falling_tick"); let parts = part_table.for_hook(HookId::FallingTick).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = FallingTickEvent { state, pos, entity }; for part in super::entered_parts(parts, "falling_tick") { part.falling_tick(&mut *host, &mut event);  }  }
 /// What [`Hooks::farmland_trample`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16075,7 +16075,7 @@ pub pos: BlockPos,
 pub state: BlockState,
 pub friction: f32,
 }
-#[doc(hidden)] pub fn dispatch_friction(context: &dyn LoopContext, entity: u32, kind: & str, pos: BlockPos, state: BlockState, friction: & mut f32) {
+#[doc(hidden)] pub fn dispatch_friction(context: &dyn LoopContext, entity: u32, kind: & str, pos: BlockPos, state: BlockState, friction: & mut f32) { 
 
 if !super::has_part_hook(HookId::Friction) { return; } let part_table = super::parts(HookId::Friction, "friction"); let parts = part_table.for_hook(HookId::Friction).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = FrictionEvent { entity, kind, pos, state, friction: *friction }; for part in super::entered_parts(parts, "friction") { part.friction(context, &mut event);  } *friction = event.friction; }
 /// What [`Hooks::game_rule_changed`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16128,7 +16128,7 @@ pub struct GeneralEntityTickEvent<'a> {
 pub kind: & 'a str,
 pub entity: mod_api :: EntityRef,
 }
-#[doc(hidden)] pub fn dispatch_general_entity_tick(host: &mut dyn ServerHost, kind: & str, entity: mod_api :: EntityRef) {
+#[doc(hidden)] pub fn dispatch_general_entity_tick(host: &mut dyn ServerHost, kind: & str, entity: mod_api :: EntityRef) { 
 
 if !super::has_part_hook(HookId::GeneralEntityTick) { return; } let part_table = super::parts(HookId::GeneralEntityTick, "general_entity_tick"); let parts = part_table.for_hook(HookId::GeneralEntityTick).map_or(&[][..], |table| table.entity(|| Some(kind))); if parts.is_empty() { return; } let mut event = GeneralEntityTickEvent { kind, entity }; for part in super::entered_parts(parts, "general_entity_tick") { part.general_entity_tick(&mut *host, &mut event);  }  }
 /// What [`Hooks::get_arm_pose`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16172,7 +16172,7 @@ pub stack: & 'a ItemStack,
 pub slot: & 'a str,
 pub sound: & 'a mut Option < Identifier >,
 }
-#[doc(hidden)] pub fn dispatch_get_equip_sound(host: &dyn Host, stack: & ItemStack, slot: & str, sound: & mut Option < Identifier >) {
+#[doc(hidden)] pub fn dispatch_get_equip_sound(host: &dyn Host, stack: & ItemStack, slot: & str, sound: & mut Option < Identifier >) { 
 
 if !super::has_part_hook(HookId::GetEquipSound) { return; } let part_table = super::parts(HookId::GetEquipSound, "get_equip_sound"); let parts = part_table.for_hook(HookId::GetEquipSound).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = GetEquipSoundEvent { stack, slot, sound }; for part in super::entered_parts(parts, "get_equip_sound") { part.get_equip_sound(host, &mut event);  }  }
 /// What [`Hooks::grindstone_place`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16231,7 +16231,7 @@ pub struct HighlightTipEvent<'a> {
 pub stack: & 'a ItemStack,
 pub name: & 'a mut Text,
 }
-#[doc(hidden)] pub fn dispatch_highlight_tip(host: &dyn ClientHost, stack: & ItemStack, name: & mut Text) {
+#[doc(hidden)] pub fn dispatch_highlight_tip(host: &dyn ClientHost, stack: & ItemStack, name: & mut Text) { 
 
 if !super::has_part_hook(HookId::HighlightTip) { return; } let part_table = super::parts(HookId::HighlightTip, "highlight_tip"); let parts = part_table.for_hook(HookId::HighlightTip).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = HighlightTipEvent { stack, name }; for part in super::entered_parts(parts, "highlight_tip") { part.highlight_tip(host, &mut event);  }  }
 /// What [`Hooks::hotbar_attack_indicator_progress`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16251,8 +16251,8 @@ pub state: BlockState,
 pub pos: BlockPos,
 pub face: Direction,
 }
-#[doc(hidden)] pub fn dispatch_ignited_by_lava(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, face: Direction, ignites: & mut Option < bool >) {
-if ignites.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_ignited_by_lava(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, face: Direction, ignites: & mut Option < bool >) { 
+if ignites.is_some() { return; } 
 if !super::has_part_hook(HookId::IgnitedByLava) { return; } let part_table = super::parts(HookId::IgnitedByLava, "ignited_by_lava"); let parts = part_table.for_hook(HookId::IgnitedByLava).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = IgnitedByLavaEvent { dimension, state, pos, face }; for part in super::entered_parts(parts, "ignited_by_lava") { if let Some(replacement) = part.ignited_by_lava(level, &mut event) { *ignites = Some(replacement);  break; }  }  }
 /// What [`Hooks::ingredient_test`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -16284,7 +16284,7 @@ pub struct IsCombineRepairableEvent<'a> {
 pub stack: & 'a mod_api :: ItemStack,
 pub repairable: bool,
 }
-#[doc(hidden)] pub fn dispatch_is_combine_repairable(context: &dyn LoopContext, stack: & mod_api :: ItemStack, repairable: & mut bool) {
+#[doc(hidden)] pub fn dispatch_is_combine_repairable(context: &dyn LoopContext, stack: & mod_api :: ItemStack, repairable: & mut bool) { 
 
 if !super::has_part_hook(HookId::IsCombineRepairable) { return; } let part_table = super::parts(HookId::IsCombineRepairable, "is_combine_repairable"); let parts = part_table.for_hook(HookId::IsCombineRepairable).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = IsCombineRepairableEvent { stack, repairable: *repairable }; for part in super::entered_parts(parts, "is_combine_repairable") { part.is_combine_repairable(context, &mut event);  } *repairable = event.repairable; }
 /// What [`BlockPart::is_fertile`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16296,7 +16296,7 @@ pub state: BlockState,
 pub pos: BlockPos,
 pub fertile: bool,
 }
-#[doc(hidden)] pub fn dispatch_is_fertile(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, fertile: & mut bool) {
+#[doc(hidden)] pub fn dispatch_is_fertile(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, fertile: & mut bool) { 
 
 if !super::has_part_hook(HookId::IsFertile) { return; } let part_table = super::parts(HookId::IsFertile, "is_fertile"); let parts = part_table.for_hook(HookId::IsFertile).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = IsFertileEvent { dimension, state, pos, fertile: *fertile }; for part in super::entered_parts(parts, "is_fertile") { part.is_fertile(level, &mut event);  } *fertile = event.fertile; }
 /// What [`BlockPart::is_fire_source`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16307,8 +16307,8 @@ pub dimension: LevelDimension,
 pub state: BlockState,
 pub pos: BlockPos,
 }
-#[doc(hidden)] pub fn dispatch_is_fire_source(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, source: & mut Option < bool >) {
-if source.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_is_fire_source(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, source: & mut Option < bool >) { 
+if source.is_some() { return; } 
 if !super::has_part_hook(HookId::IsFireSource) { return; } let part_table = super::parts(HookId::IsFireSource, "is_fire_source"); let parts = part_table.for_hook(HookId::IsFireSource).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = IsFireSourceEvent { dimension, state, pos }; for part in super::entered_parts(parts, "is_fire_source") { if let Some(replacement) = part.is_fire_source(level, &mut event) { *source = Some(replacement);  break; }  }  }
 /// What [`BlockPart::is_ladder`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -16319,7 +16319,7 @@ pub pos: BlockPos,
 pub state: BlockState,
 pub ladder: bool,
 }
-#[doc(hidden)] pub fn dispatch_is_ladder(context: &dyn LoopContext, entity: u32, pos: BlockPos, state: BlockState, ladder: & mut bool) {
+#[doc(hidden)] pub fn dispatch_is_ladder(context: &dyn LoopContext, entity: u32, pos: BlockPos, state: BlockState, ladder: & mut bool) { 
 
 if !super::has_part_hook(HookId::IsLadder) { return; } let part_table = super::parts(HookId::IsLadder, "is_ladder"); let parts = part_table.for_hook(HookId::IsLadder).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = IsLadderEvent { entity, pos, state, ladder: *ladder }; for part in super::entered_parts(parts, "is_ladder") { part.is_ladder(context, &mut event);  } *ladder = event.ladder; }
 /// What [`ItemPart::is_not_replaceable_by_pick_action`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16331,7 +16331,7 @@ pub stack: & 'a ItemStack,
 pub slot: u32,
 pub not_replaceable: bool,
 }
-#[doc(hidden)] pub fn dispatch_is_not_replaceable_by_pick_action(host: &dyn Host, player: u128, stack: & ItemStack, slot: u32, not_replaceable: & mut bool) {
+#[doc(hidden)] pub fn dispatch_is_not_replaceable_by_pick_action(host: &dyn Host, player: u128, stack: & ItemStack, slot: u32, not_replaceable: & mut bool) { 
 
 if !super::has_part_hook(HookId::IsNotReplaceableByPickAction) { return; } let part_table = super::parts(HookId::IsNotReplaceableByPickAction, "is_not_replaceable_by_pick_action"); let parts = part_table.for_hook(HookId::IsNotReplaceableByPickAction).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = IsNotReplaceableByPickActionEvent { player, stack, slot, not_replaceable: *not_replaceable }; for part in super::entered_parts(parts, "is_not_replaceable_by_pick_action") { part.is_not_replaceable_by_pick_action(host, &mut event);  } *not_replaceable = event.not_replaceable; }
 /// What [`BlockPart::is_pathfindable`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16342,7 +16342,7 @@ pub state: BlockState,
 pub kind: PathComputationType,
 pub pathfindable: bool,
 }
-#[doc(hidden)] pub fn dispatch_is_pathfindable(host: &dyn Host, state: BlockState, kind: PathComputationType, pathfindable: & mut bool) {
+#[doc(hidden)] pub fn dispatch_is_pathfindable(host: &dyn Host, state: BlockState, kind: PathComputationType, pathfindable: & mut bool) { 
 
 if !super::has_part_hook(HookId::IsPathfindable) { return; } let part_table = super::parts(HookId::IsPathfindable, "is_pathfindable"); let parts = part_table.for_hook(HookId::IsPathfindable).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = IsPathfindableEvent { state, kind, pathfindable: *pathfindable }; for part in super::entered_parts(parts, "is_pathfindable") { part.is_pathfindable(host, &mut event);  } *pathfindable = event.pathfindable; }
 /// What [`ItemPart::is_piglin_currency`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16352,7 +16352,7 @@ pub struct IsPiglinCurrencyEvent<'a> {
 pub stack: & 'a ItemStack,
 pub currency: bool,
 }
-#[doc(hidden)] pub fn dispatch_is_piglin_currency(host: &dyn Host, stack: & ItemStack, currency: & mut bool) {
+#[doc(hidden)] pub fn dispatch_is_piglin_currency(host: &dyn Host, stack: & ItemStack, currency: & mut bool) { 
 
 if !super::has_part_hook(HookId::IsPiglinCurrency) { return; } let part_table = super::parts(HookId::IsPiglinCurrency, "is_piglin_currency"); let parts = part_table.for_hook(HookId::IsPiglinCurrency).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = IsPiglinCurrencyEvent { stack, currency: *currency }; for part in super::entered_parts(parts, "is_piglin_currency") { part.is_piglin_currency(host, &mut event);  } *currency = event.currency; }
 /// What [`ItemPart::is_primary_item_for`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16363,7 +16363,7 @@ pub stack: & 'a ItemStack,
 pub enchantment: & 'a str,
 pub primary: bool,
 }
-#[doc(hidden)] pub fn dispatch_is_primary_item_for(host: &dyn Host, stack: & ItemStack, enchantment: & str, primary: & mut bool) {
+#[doc(hidden)] pub fn dispatch_is_primary_item_for(host: &dyn Host, stack: & ItemStack, enchantment: & str, primary: & mut bool) { 
 
 if !super::has_part_hook(HookId::IsPrimaryItemFor) { return; } let part_table = super::parts(HookId::IsPrimaryItemFor, "is_primary_item_for"); let parts = part_table.for_hook(HookId::IsPrimaryItemFor).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = IsPrimaryItemForEvent { stack, enchantment, primary: *primary }; for part in super::entered_parts(parts, "is_primary_item_for") { part.is_primary_item_for(host, &mut event);  } *primary = event.primary; }
 /// What [`BlockPart::item_after_vertical_collision`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16380,7 +16380,7 @@ pub stack: & 'a mut Option < ItemStack >,
 }
 #[doc(hidden)] pub fn dispatch_item_after_vertical_collision(mut host: HostSide, call: calls::ItemAfterVerticalCollisionCall<'_>) { let calls::ItemAfterVerticalCollisionCall { dimension, client, entity, state, block_pos, item_pos, stack, discard } = call;
 
-if *discard { return; }
+if *discard { return; } 
 if !super::has_part_hook(HookId::ItemAfterVerticalCollision) { return; } let part_table = super::parts(HookId::ItemAfterVerticalCollision, "item_after_vertical_collision"); let parts = part_table.for_hook(HookId::ItemAfterVerticalCollision).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = ItemAfterVerticalCollisionEvent { dimension, client, entity, state, block_pos, item_pos, stack }; for part in super::entered_parts(parts, "item_after_vertical_collision") { if matches!(part.item_after_vertical_collision(host.reborrow(), &mut event), Flow::Cancel) { *discard = true;  break; }  }  }
 /// What [`ItemPart::on_left_click_entity`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -16391,8 +16391,8 @@ pub stack: & 'a ItemStack,
 pub entity: i32,
 pub kind: & 'a str,
 }
-#[doc(hidden)] pub fn dispatch_on_left_click_entity(host: &mut dyn ServerHost, player: u128, stack: & ItemStack, entity: i32, kind: & str, canceled: & mut bool) {
-if *canceled { return; }
+#[doc(hidden)] pub fn dispatch_on_left_click_entity(host: &mut dyn ServerHost, player: u128, stack: & ItemStack, entity: i32, kind: & str, canceled: & mut bool) { 
+if *canceled { return; } 
 if !super::has_part_hook(HookId::OnLeftClickEntity) { return; } let part_table = super::parts(HookId::OnLeftClickEntity, "on_left_click_entity"); let parts = part_table.for_hook(HookId::OnLeftClickEntity).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = OnLeftClickEntityEvent { player, stack, entity, kind }; for part in super::entered_parts(parts, "on_left_click_entity") { if matches!(part.on_left_click_entity(&mut *host, &mut event), Flow::Cancel) { *canceled = true;  break; }  }  }
 /// What [`ItemPart::on_entity_swing`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -16402,8 +16402,8 @@ pub stack: & 'a ItemStack,
 pub entity: Option < i32 >,
 pub hand: Hand,
 }
-#[doc(hidden)] pub fn dispatch_on_entity_swing(mut host: HostSide, stack: & ItemStack, entity: Option < i32 >, hand: Hand, canceled: & mut bool) {
-if *canceled { return; }
+#[doc(hidden)] pub fn dispatch_on_entity_swing(mut host: HostSide, stack: & ItemStack, entity: Option < i32 >, hand: Hand, canceled: & mut bool) { 
+if *canceled { return; } 
 if !super::has_part_hook(HookId::OnEntitySwing) { return; } let part_table = super::parts(HookId::OnEntitySwing, "on_entity_swing"); let parts = part_table.for_hook(HookId::OnEntitySwing).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = OnEntitySwingEvent { stack, entity, hand }; for part in super::entered_parts(parts, "on_entity_swing") { if matches!(part.on_entity_swing(host.reborrow(), &mut event), Flow::Cancel) { *canceled = true;  break; }  }  }
 /// What [`Hooks::item_attribute_modifier`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -16439,8 +16439,8 @@ pub entity: i32,
 pub kind: & 'a str,
 pub stack: & 'a ItemStack,
 }
-#[doc(hidden)] pub fn dispatch_item_interact_mob(mut host: HostSide, hand: Hand, entity: i32, kind: & str, stack: & ItemStack, result: & mut Option < mod_api :: InteractionResult >) {
-if result.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_item_interact_mob(mut host: HostSide, hand: Hand, entity: i32, kind: & str, stack: & ItemStack, result: & mut Option < mod_api :: InteractionResult >) { 
+if result.is_some() { return; } 
 if !super::has_part_hook(HookId::ItemInteractMob) { return; } let part_table = super::parts(HookId::ItemInteractMob, "item_interact_mob"); let parts = part_table.for_hook(HookId::ItemInteractMob).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = ItemInteractMobEvent { hand, entity, kind, stack }; for part in super::entered_parts(parts, "item_interact_mob") { if let Some(replacement) = part.item_interact_mob(host.reborrow(), &mut event) { *result = Some(replacement);  break; }  }  }
 /// What [`Hooks::item_model_property`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -16658,8 +16658,8 @@ pub dimension: LevelDimension,
 pub pos: BlockPos,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_light_emission(host: &dyn Host, dimension: LevelDimension, pos: BlockPos, state: BlockState, emission: & mut Option < u8 >) {
-if emission.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_light_emission(host: &dyn Host, dimension: LevelDimension, pos: BlockPos, state: BlockState, emission: & mut Option < u8 >) { 
+if emission.is_some() { return; } 
 if !super::has_part_hook(HookId::LightEmission) { return; } let part_table = super::parts(HookId::LightEmission, "light_emission"); let parts = part_table.for_hook(HookId::LightEmission).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = LightEmissionEvent { dimension, pos, state }; for part in super::entered_parts(parts, "light_emission") { if let Some(replacement) = part.light_emission(host, &mut event) { *emission = Some(replacement);  break; }  }  }
 /// What [`Hooks::living_change_target`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -16916,7 +16916,7 @@ pub pos: BlockPos,
 pub trapdoor: BlockState,
 pub climbable: bool,
 }
-#[doc(hidden)] pub fn dispatch_makes_open_trapdoor_above_climbable(context: &dyn LoopContext, state: BlockState, pos: BlockPos, trapdoor: BlockState, climbable: & mut bool) {
+#[doc(hidden)] pub fn dispatch_makes_open_trapdoor_above_climbable(context: &dyn LoopContext, state: BlockState, pos: BlockPos, trapdoor: BlockState, climbable: & mut bool) { 
 
 if !super::has_part_hook(HookId::MakesOpenTrapdoorAboveClimbable) { return; } let part_table = super::parts(HookId::MakesOpenTrapdoorAboveClimbable, "makes_open_trapdoor_above_climbable"); let parts = part_table.for_hook(HookId::MakesOpenTrapdoorAboveClimbable).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = MakesOpenTrapdoorAboveClimbableEvent { state, pos, trapdoor, climbable: *climbable }; for part in super::entered_parts(parts, "makes_open_trapdoor_above_climbable") { part.makes_open_trapdoor_above_climbable(context, &mut event);  } *climbable = event.climbable; }
 /// What [`ItemPart::makes_piglins_neutral`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16927,7 +16927,7 @@ pub stack: & 'a ItemStack,
 pub wearer: LivingRef,
 pub neutral: bool,
 }
-#[doc(hidden)] pub fn dispatch_makes_piglins_neutral(host: &dyn Host, stack: & ItemStack, wearer: LivingRef, neutral: & mut bool) {
+#[doc(hidden)] pub fn dispatch_makes_piglins_neutral(host: &dyn Host, stack: & ItemStack, wearer: LivingRef, neutral: & mut bool) { 
 
 if !super::has_part_hook(HookId::MakesPiglinsNeutral) { return; } let part_table = super::parts(HookId::MakesPiglinsNeutral, "makes_piglins_neutral"); let parts = part_table.for_hook(HookId::MakesPiglinsNeutral).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = MakesPiglinsNeutralEvent { stack, wearer, neutral: *neutral }; for part in super::entered_parts(parts, "makes_piglins_neutral") { part.makes_piglins_neutral(host, &mut event);  } *neutral = event.neutral; }
 /// What [`Hooks::map_decoration_types`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16970,7 +16970,7 @@ pub pos: [i32 ; 3],
 pub eye: [f64 ; 3],
 pub valid: bool,
 }
-#[doc(hidden)] pub fn dispatch_menu_still_valid(context: &dyn LoopContext, player: u128, menu: & str, pos: [i32 ; 3], eye: [f64 ; 3], valid: & mut bool) {
+#[doc(hidden)] pub fn dispatch_menu_still_valid(context: &dyn LoopContext, player: u128, menu: & str, pos: [i32 ; 3], eye: [f64 ; 3], valid: & mut bool) { 
 
 if !super::has_part_hook(HookId::MenuStillValid) { return; } let part_table = super::parts(HookId::MenuStillValid, "menu_still_valid"); let parts = part_table.for_hook(HookId::MenuStillValid).map_or(&[][..], |table| table.menu(|| Some(menu))); if parts.is_empty() { return; } let mut event = MenuStillValidEvent { player, menu, pos, eye, valid: *valid }; for part in super::entered_parts(parts, "menu_still_valid") { part.menu_still_valid(context, &mut event);  } *valid = event.valid; }
 /// What [`MenuPart::menu_transfer`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -16986,7 +16986,7 @@ pub dry_run: bool,
 }
 #[doc(hidden)] pub fn dispatch_menu_transfer(host: &mut dyn ServerHost, call: calls::MenuTransferCall<'_>) { let calls::MenuTransferCall { player, menu, pos, recipe, max, dry_run, result } = call;
 
-if result.is_some() { return; }
+if result.is_some() { return; } 
 if !super::has_part_hook(HookId::MenuTransfer) { return; } let part_table = super::parts(HookId::MenuTransfer, "menu_transfer"); let parts = part_table.for_hook(HookId::MenuTransfer).map_or(&[][..], |table| table.menu(|| Some(menu))); if parts.is_empty() { return; } let mut event = MenuTransferEvent { player, menu, pos, recipe, max, dry_run }; for part in super::entered_parts(parts, "menu_transfer") { if let Some(replacement) = part.menu_transfer(&mut *host, &mut event) { *result = Some(replacement);  break; }  }  }
 /// What [`BlockPart::minecart_pass`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -16996,7 +16996,7 @@ pub state: BlockState,
 pub pos: BlockPos,
 pub entity: EntityRef,
 }
-#[doc(hidden)] pub fn dispatch_minecart_pass(host: &mut dyn ServerHost, state: BlockState, pos: BlockPos, entity: EntityRef) {
+#[doc(hidden)] pub fn dispatch_minecart_pass(host: &mut dyn ServerHost, state: BlockState, pos: BlockPos, entity: EntityRef) { 
 
 if !super::has_part_hook(HookId::MinecartPass) { return; } let part_table = super::parts(HookId::MinecartPass, "minecart_pass"); let parts = part_table.for_hook(HookId::MinecartPass).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = MinecartPassEvent { state, pos, entity }; for part in super::entered_parts(parts, "minecart_pass") { part.minecart_pass(&mut *host, &mut event);  }  }
 /// What [`Hooks::mob_despawn`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -17279,7 +17279,7 @@ pub state: BlockState,
 pub block_entity: Option < BlockEntityRef >,
 pub explosion: & 'a ExplosionStart < 'a >,
 }
-#[doc(hidden)] pub fn dispatch_on_block_exploded(host: &mut dyn ServerHost, pos: BlockPos, state: BlockState, block_entity: Option < BlockEntityRef >, explosion: & ExplosionStart < '_ >) {
+#[doc(hidden)] pub fn dispatch_on_block_exploded(host: &mut dyn ServerHost, pos: BlockPos, state: BlockState, block_entity: Option < BlockEntityRef >, explosion: & ExplosionStart < '_ >) { 
 
 if !super::has_part_hook(HookId::OnBlockExploded) { return; } let part_table = super::parts(HookId::OnBlockExploded, "on_block_exploded"); let parts = part_table.for_hook(HookId::OnBlockExploded).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = OnBlockExplodedEvent { pos, state, block_entity, explosion }; for part in super::entered_parts(parts, "on_block_exploded") { part.on_block_exploded(&mut *host, &mut event);  }  }
 /// What [`ItemPart::on_block_placed_by`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -17308,7 +17308,7 @@ pub old: BlockState,
 pub new: BlockState,
 pub predicted: bool,
 }
-#[doc(hidden)] pub fn dispatch_on_block_state_change(mut level: LevelSide, dimension: LevelDimension, pos: BlockPos, state: BlockState, old: BlockState, new: BlockState, predicted: bool) {
+#[doc(hidden)] pub fn dispatch_on_block_state_change(mut level: LevelSide, dimension: LevelDimension, pos: BlockPos, state: BlockState, old: BlockState, new: BlockState, predicted: bool) { 
 
 if !super::has_part_hook(HookId::OnBlockStateChange) { return; } let part_table = super::parts(HookId::OnBlockStateChange, "on_block_state_change"); let parts = part_table.for_hook(HookId::OnBlockStateChange).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = OnBlockStateChangeEvent { dimension, pos, state, old, new, predicted }; for part in super::entered_parts(parts, "on_block_state_change") { part.on_block_state_change(level.reborrow(), &mut event);  }  }
 /// What [`BlockPart::on_caught_fire`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -17320,7 +17320,7 @@ pub state: BlockState,
 pub pos: BlockPos,
 pub face: Direction,
 }
-#[doc(hidden)] pub fn dispatch_on_caught_fire(level: &mut dyn LevelWriteHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, face: Direction) {
+#[doc(hidden)] pub fn dispatch_on_caught_fire(level: &mut dyn LevelWriteHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, face: Direction) { 
 
 if !super::has_part_hook(HookId::OnCaughtFire) { return; } let part_table = super::parts(HookId::OnCaughtFire, "on_caught_fire"); let parts = part_table.for_hook(HookId::OnCaughtFire).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = OnCaughtFireEvent { dimension, state, pos, face }; for part in super::entered_parts(parts, "on_caught_fire") { part.on_caught_fire(&mut *level, &mut event);  }  }
 /// What [`BlockEntityPart::on_chunk_unloaded`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -17331,7 +17331,7 @@ pub pos: [i32 ; 3],
 pub block_entity: BlockEntityRef,
 pub entity: & 'a ModBlockEntity,
 }
-#[doc(hidden)] pub fn dispatch_on_chunk_unloaded(mut host: HostSide, pos: [i32 ; 3], block_entity: BlockEntityRef, entity: & ModBlockEntity) {
+#[doc(hidden)] pub fn dispatch_on_chunk_unloaded(mut host: HostSide, pos: [i32 ; 3], block_entity: BlockEntityRef, entity: & ModBlockEntity) { 
 
 if !super::has_part_hook(HookId::OnChunkUnloaded) { return; } let part_table = super::parts(HookId::OnChunkUnloaded, "on_chunk_unloaded"); let parts = part_table.for_hook(HookId::OnChunkUnloaded).map_or(&[][..], |table| table.block_entity_kind(|| Some(entity.id()))); if parts.is_empty() { return; } let mut event = OnChunkUnloadedEvent { pos, block_entity, entity }; for part in super::entered_parts(parts, "on_chunk_unloaded") { part.on_chunk_unloaded(host.reborrow(), &mut event);  }  }
 /// What [`BlockPart::on_destroyed_by_player`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -17344,8 +17344,8 @@ pub state: BlockState,
 pub tool: Option < & 'a ItemStack >,
 pub will_harvest: bool,
 }
-#[doc(hidden)] pub fn dispatch_on_destroyed_by_player(host: &mut dyn ServerHost, player: u128, pos: [i32 ; 3], state: BlockState, tool: Option < & ItemStack >, will_harvest: bool, destroyed: & mut Option < bool >) {
-if destroyed.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_on_destroyed_by_player(host: &mut dyn ServerHost, player: u128, pos: [i32 ; 3], state: BlockState, tool: Option < & ItemStack >, will_harvest: bool, destroyed: & mut Option < bool >) { 
+if destroyed.is_some() { return; } 
 if !super::has_part_hook(HookId::OnDestroyedByPlayer) { return; } let part_table = super::parts(HookId::OnDestroyedByPlayer, "on_destroyed_by_player"); let parts = part_table.for_hook(HookId::OnDestroyedByPlayer).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = OnDestroyedByPlayerEvent { player, pos, state, tool, will_harvest }; for part in super::entered_parts(parts, "on_destroyed_by_player") { if let Some(replacement) = part.on_destroyed_by_player(&mut *host, &mut event) { *destroyed = Some(replacement);  break; }  }  }
 /// What [`BlockPart::on_destroyed_by_push_reaction`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -17357,7 +17357,7 @@ pub state: BlockState,
 pub direction: Direction,
 pub fluid: mod_api :: FluidState,
 }
-#[doc(hidden)] pub fn dispatch_on_destroyed_by_push_reaction(level: &mut dyn LevelWriteHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, direction: Direction, fluid: mod_api :: FluidState) {
+#[doc(hidden)] pub fn dispatch_on_destroyed_by_push_reaction(level: &mut dyn LevelWriteHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, direction: Direction, fluid: mod_api :: FluidState) { 
 
 if !super::has_part_hook(HookId::OnDestroyedByPushReaction) { return; } let part_table = super::parts(HookId::OnDestroyedByPushReaction, "on_destroyed_by_push_reaction"); let parts = part_table.for_hook(HookId::OnDestroyedByPushReaction).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = OnDestroyedByPushReactionEvent { dimension, pos, state, direction, fluid }; for part in super::entered_parts(parts, "on_destroyed_by_push_reaction") { part.on_destroyed_by_push_reaction(&mut *level, &mut event);  }  }
 /// What [`ItemPart::on_dropped_by_player`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -17368,8 +17368,8 @@ pub player: PlayerRef,
 pub stack: & 'a ItemStack,
 pub all: bool,
 }
-#[doc(hidden)] pub fn dispatch_on_dropped_by_player(host: &dyn Host, player: PlayerRef, stack: & ItemStack, all: bool, canceled: & mut bool) {
-if *canceled { return; }
+#[doc(hidden)] pub fn dispatch_on_dropped_by_player(host: &dyn Host, player: PlayerRef, stack: & ItemStack, all: bool, canceled: & mut bool) { 
+if *canceled { return; } 
 if !super::has_part_hook(HookId::OnDroppedByPlayer) { return; } let part_table = super::parts(HookId::OnDroppedByPlayer, "on_dropped_by_player"); let parts = part_table.for_hook(HookId::OnDroppedByPlayer).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = OnDroppedByPlayerEvent { player, stack, all }; for part in super::entered_parts(parts, "on_dropped_by_player") { if matches!(part.on_dropped_by_player(host, &mut event), Flow::Cancel) { *canceled = true;  break; }  }  }
 /// What [`ItemPart::on_entity_item_update`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -17380,7 +17380,7 @@ pub item: ItemEntityRef,
 }
 #[doc(hidden)] pub fn dispatch_on_entity_item_update(host: &mut dyn ServerHost, call: calls::OnEntityItemUpdateCall<'_>) { let calls::OnEntityItemUpdateCall { stack, item, canceled } = call;
 
-if *canceled { return; }
+if *canceled { return; } 
 if !super::has_part_hook(HookId::OnEntityItemUpdate) { return; } let part_table = super::parts(HookId::OnEntityItemUpdate, "on_entity_item_update"); let parts = part_table.for_hook(HookId::OnEntityItemUpdate).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = OnEntityItemUpdateEvent { stack, item }; for part in super::entered_parts(parts, "on_entity_item_update") { if matches!(part.on_entity_item_update(&mut *host, &mut event), Flow::Cancel) { *canceled = true;  break; }  }  }
 /// What [`ItemPart::on_item_use_first`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -17389,8 +17389,8 @@ pub struct OnItemUseFirstEvent<'a> {
 pub stack: & 'a mod_api :: ItemStack,
 pub click: & 'a BlockClick < 'a >,
 }
-#[doc(hidden)] pub fn dispatch_on_item_use_first(host: &mut dyn ServerHost, stack: & mod_api :: ItemStack, click: & BlockClick < '_ >, answer: & mut Option < mod_api :: InteractionResult >) {
-if answer.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_on_item_use_first(host: &mut dyn ServerHost, stack: & mod_api :: ItemStack, click: & BlockClick < '_ >, answer: & mut Option < mod_api :: InteractionResult >) { 
+if answer.is_some() { return; } 
 if !super::has_part_hook(HookId::OnItemUseFirst) { return; } let part_table = super::parts(HookId::OnItemUseFirst, "on_item_use_first"); let parts = part_table.for_hook(HookId::OnItemUseFirst).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = OnItemUseFirstEvent { stack, click }; for part in super::entered_parts(parts, "on_item_use_first") { if let Some(replacement) = part.on_item_use_first(&mut *host, &mut event) { *answer = Some(replacement);  break; }  }  }
 /// What [`BlockPart::on_neighbor_change`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -17401,7 +17401,7 @@ pub pos: BlockPos,
 pub state: BlockState,
 pub neighbor: BlockPos,
 }
-#[doc(hidden)] pub fn dispatch_on_neighbor_change(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, neighbor: BlockPos) {
+#[doc(hidden)] pub fn dispatch_on_neighbor_change(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, neighbor: BlockPos) { 
 
 if !super::has_part_hook(HookId::OnNeighborChange) { return; } let part_table = super::parts(HookId::OnNeighborChange, "on_neighbor_change"); let parts = part_table.for_hook(HookId::OnNeighborChange).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = OnNeighborChangeEvent { dimension, pos, state, neighbor }; for part in super::entered_parts(parts, "on_neighbor_change") { part.on_neighbor_change(level, &mut event);  }  }
 /// What [`BlockPart::on_tree_grow`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -17412,8 +17412,8 @@ pub state: BlockState,
 pub pos: [i32 ; 3],
 pub random: & 'a mut dyn StructureRandom,
 }
-#[doc(hidden)] pub fn dispatch_on_tree_grow(context: &dyn WorldgenHost, state: BlockState, pos: [i32 ; 3], random: & mut dyn StructureRandom, soil: & mut Option < Option < BlockState > >) {
-if soil.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_on_tree_grow(context: &dyn WorldgenHost, state: BlockState, pos: [i32 ; 3], random: & mut dyn StructureRandom, soil: & mut Option < Option < BlockState > >) { 
+if soil.is_some() { return; } 
 if !super::has_part_hook(HookId::OnTreeGrow) { return; } let part_table = super::worldgen_parts(); let parts = part_table.for_hook(HookId::OnTreeGrow).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = OnTreeGrowEvent { state, pos, random }; for part in super::entered_parts(parts, "on_tree_grow") { if let Some(replacement) = part.on_tree_grow(context, &mut event) { *soil = Some(replacement);  break; }  }  }
 /// What [`Hooks::permissions_changed`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -17439,8 +17439,8 @@ pub dimension: LevelDimension,
 pub pos: BlockPos,
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_piston_carries_block_entity(mut level: LevelSide, dimension: LevelDimension, pos: BlockPos, state: BlockState, movable: & mut Option < bool >) {
-if movable.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_piston_carries_block_entity(mut level: LevelSide, dimension: LevelDimension, pos: BlockPos, state: BlockState, movable: & mut Option < bool >) { 
+if movable.is_some() { return; } 
 if !super::has_part_hook(HookId::PistonCarriesBlockEntity) { return; } let part_table = super::parts(HookId::PistonCarriesBlockEntity, "piston_carries_block_entity"); let parts = part_table.for_hook(HookId::PistonCarriesBlockEntity).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = PistonCarriesBlockEntityEvent { dimension, pos, state }; for part in super::entered_parts(parts, "piston_carries_block_entity") { if let Some(replacement) = part.piston_carries_block_entity(level.reborrow(), &mut event) { *movable = Some(replacement);  break; }  }  }
 /// What [`BlockPart::piston_push_reaction`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -17448,8 +17448,8 @@ if !super::has_part_hook(HookId::PistonCarriesBlockEntity) { return; } let part_
 pub struct PistonPushReactionEvent {
 pub state: BlockState,
 }
-#[doc(hidden)] pub fn dispatch_piston_push_reaction(state: BlockState, reaction: & mut Option < mod_api :: PushReaction >) {
-if reaction.is_some() { return; }
+#[doc(hidden)] pub fn dispatch_piston_push_reaction(state: BlockState, reaction: & mut Option < mod_api :: PushReaction >) { 
+if reaction.is_some() { return; } 
 if !super::has_part_hook(HookId::PistonPushReaction) { return; } let part_table = super::parts(HookId::PistonPushReaction, "piston_push_reaction"); let parts = part_table.for_hook(HookId::PistonPushReaction).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = PistonPushReactionEvent { state }; for part in super::entered_parts(parts, "piston_push_reaction") { if let Some(replacement) = part.piston_push_reaction(&mut event) { *reaction = Some(replacement);  break; }  }  }
 /// What [`BlockPart::play_hit_sound`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -17461,7 +17461,7 @@ pub face: Direction,
 }
 #[doc(hidden)] pub fn dispatch_play_hit_sound(host: &mut dyn ClientHost, call: calls::PlayHitSoundCall<'_>) { let calls::PlayHitSoundCall { state, pos, face, cancel } = call;
 
-if *cancel { return; }
+if *cancel { return; } 
 if !super::has_part_hook(HookId::PlayHitSound) { return; } let part_table = super::parts(HookId::PlayHitSound, "play_hit_sound"); let parts = part_table.for_hook(HookId::PlayHitSound).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = PlayHitSoundEvent { state, pos, face }; for part in super::entered_parts(parts, "play_hit_sound") { if matches!(part.play_hit_sound(&mut *host, &mut event), Flow::Cancel) { *cancel = true;  break; }  }  }
 /// What [`Hooks::player_break_speed`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -17793,7 +17793,7 @@ pub state: BlockState,
 pub entity: & 'a ModBlockEntity,
 pub drops: & 'a mut Vec < ItemStack >,
 }
-#[doc(hidden)] pub fn dispatch_pre_remove_side_effects(level: &mut dyn LevelRandomHost, pos: BlockPos, state: BlockState, entity: & ModBlockEntity, drops: & mut Vec < ItemStack >, __validate_drops: &mut dyn FnMut(&Vec < ItemStack >) -> Result<(), StackWriteError>) {
+#[doc(hidden)] pub fn dispatch_pre_remove_side_effects(level: &mut dyn LevelRandomHost, pos: BlockPos, state: BlockState, entity: & ModBlockEntity, drops: & mut Vec < ItemStack >, __validate_drops: &mut dyn FnMut(&Vec < ItemStack >) -> Result<(), StackWriteError>) { 
 
 if !super::has_part_hook(HookId::PreRemoveSideEffects) { return; } let part_table = super::parts(HookId::PreRemoveSideEffects, "pre_remove_side_effects"); let parts = part_table.for_hook(HookId::PreRemoveSideEffects).map_or(&[][..], |table| table.block_entity_kind(|| Some(entity.id()))); if parts.is_empty() { return; } let mut __previous_drops = drops.clone();let mut event = PreRemoveSideEffectsEvent { pos, state, entity, drops }; for part in super::entered_parts(parts, "pre_remove_side_effects") { part.pre_remove_side_effects(&mut *level, &mut event); if *event.drops != __previous_drops { match __validate_drops(event.drops) { Ok(()) => __previous_drops = event.drops.clone(), Err(error) => { *event.drops = __previous_drops.clone(); log::warn!("mod {} hook pre_remove_side_effects output drops refused: {error:?}", super::content::crash::current_native_mod().unwrap_or("unknown")); } } } }  }
 /// What [`BlockPart::rail_can_make_slopes`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -17805,7 +17805,7 @@ pub state: BlockState,
 pub pos: BlockPos,
 pub can: bool,
 }
-#[doc(hidden)] pub fn dispatch_rail_can_make_slopes(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, can: & mut bool) {
+#[doc(hidden)] pub fn dispatch_rail_can_make_slopes(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, can: & mut bool) { 
 
 if !super::has_part_hook(HookId::RailCanMakeSlopes) { return; } let part_table = super::parts(HookId::RailCanMakeSlopes, "rail_can_make_slopes"); let parts = part_table.for_hook(HookId::RailCanMakeSlopes).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = RailCanMakeSlopesEvent { dimension, state, pos, can: *can }; for part in super::entered_parts(parts, "rail_can_make_slopes") { part.rail_can_make_slopes(level, &mut event);  } *can = event.can; }
 /// What [`BlockPart::rail_direction`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -17818,7 +17818,7 @@ pub pos: BlockPos,
 pub cart: Option < EntityRef >,
 pub shape: & 'a mut RailShape,
 }
-#[doc(hidden)] pub fn dispatch_rail_direction(mut level: LevelSide, dimension: LevelDimension, state: BlockState, pos: BlockPos, cart: Option < EntityRef >, shape: & mut RailShape) {
+#[doc(hidden)] pub fn dispatch_rail_direction(mut level: LevelSide, dimension: LevelDimension, state: BlockState, pos: BlockPos, cart: Option < EntityRef >, shape: & mut RailShape) { 
 
 if !super::has_part_hook(HookId::RailDirection) { return; } let part_table = super::parts(HookId::RailDirection, "rail_direction"); let parts = part_table.for_hook(HookId::RailDirection).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = RailDirectionEvent { dimension, state, pos, cart, shape }; for part in super::entered_parts(parts, "rail_direction") { part.rail_direction(level.reborrow(), &mut event);  }  }
 /// What [`BlockPart::rail_flexible`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -17830,7 +17830,7 @@ pub state: BlockState,
 pub pos: BlockPos,
 pub flexible: bool,
 }
-#[doc(hidden)] pub fn dispatch_rail_flexible(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, flexible: & mut bool) {
+#[doc(hidden)] pub fn dispatch_rail_flexible(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, pos: BlockPos, flexible: & mut bool) { 
 
 if !super::has_part_hook(HookId::RailFlexible) { return; } let part_table = super::parts(HookId::RailFlexible, "rail_flexible"); let parts = part_table.for_hook(HookId::RailFlexible).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = RailFlexibleEvent { dimension, state, pos, flexible: *flexible }; for part in super::entered_parts(parts, "rail_flexible") { part.rail_flexible(level, &mut event);  } *flexible = event.flexible; }
 /// What [`BlockPart::rail_valid_shape`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -17842,7 +17842,7 @@ pub state: BlockState,
 pub shape: RailShape,
 pub valid: bool,
 }
-#[doc(hidden)] pub fn dispatch_rail_valid_shape(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, shape: RailShape, valid: & mut bool) {
+#[doc(hidden)] pub fn dispatch_rail_valid_shape(level: &dyn LevelHost, dimension: LevelDimension, state: BlockState, shape: RailShape, valid: & mut bool) { 
 
 if !super::has_part_hook(HookId::RailValidShape) { return; } let part_table = super::parts(HookId::RailValidShape, "rail_valid_shape"); let parts = part_table.for_hook(HookId::RailValidShape).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = RailValidShapeEvent { dimension, state, shape, valid: *valid }; for part in super::entered_parts(parts, "rail_valid_shape") { part.rail_valid_shape(level, &mut event);  } *valid = event.valid; }
 /// What [`Hooks::recipe_book_categories`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18153,7 +18153,7 @@ pub moved_by_piston: bool,
 }
 #[doc(hidden)] pub fn dispatch_remove_block(level: &dyn LevelHost, call: calls::RemoveBlockCall<'_>) { let calls::RemoveBlockCall { dimension, pos, state, moved_by_piston, answer } = call;
 
-if answer.is_some() { return; }
+if answer.is_some() { return; } 
 if !super::has_part_hook(HookId::RemoveBlock) { return; } let part_table = super::parts(HookId::RemoveBlock, "remove_block"); let parts = part_table.for_hook(HookId::RemoveBlock).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = RemoveBlockEvent { dimension, pos, state, moved_by_piston }; for part in super::entered_parts(parts, "remove_block") { if let Some(replacement) = part.remove_block(level, &mut event) { *answer = Some(replacement);  break; }  }  }
 /// What [`Hooks::render_arm`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -18389,7 +18389,7 @@ pub entity_type: & 'a str,
 pub orientation: f32,
 pub position: & 'a mut Option < ([f64 ; 3] , f32 , f32) >,
 }
-#[doc(hidden)] pub fn dispatch_respawn_position(host: &dyn Host, state: BlockState, pos: BlockPos, entity_type: & str, orientation: f32, position: & mut Option < ([f64 ; 3] , f32 , f32) >) {
+#[doc(hidden)] pub fn dispatch_respawn_position(host: &dyn Host, state: BlockState, pos: BlockPos, entity_type: & str, orientation: f32, position: & mut Option < ([f64 ; 3] , f32 , f32) >) { 
 
 if !super::has_part_hook(HookId::RespawnPosition) { return; } let part_table = super::parts(HookId::RespawnPosition, "respawn_position"); let parts = part_table.for_hook(HookId::RespawnPosition).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = RespawnPositionEvent { state, pos, entity_type, orientation, position }; for part in super::entered_parts(parts, "respawn_position") { part.respawn_position(host, &mut event);  }  }
 /// What [`Hooks::right_click_empty`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18422,7 +18422,7 @@ pub pos: [i32 ; 3],
 pub rotation: StructureRotation,
 pub rotated: & 'a mut BlockState,
 }
-#[doc(hidden)] pub fn dispatch_rotate(context: &dyn WorldgenHost, state: BlockState, pos: [i32 ; 3], rotation: StructureRotation, rotated: & mut BlockState) {
+#[doc(hidden)] pub fn dispatch_rotate(context: &dyn WorldgenHost, state: BlockState, pos: [i32 ; 3], rotation: StructureRotation, rotated: & mut BlockState) { 
 
 if !super::has_part_hook(HookId::Rotate) { return; } let part_table = super::worldgen_parts(); let parts = part_table.for_hook(HookId::Rotate).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = RotateEvent { state, pos, rotation, rotated }; for part in super::entered_parts(parts, "rotate") { part.rotate(context, &mut event);  }  }
 /// What [`Hooks::scheduled_task`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18716,7 +18716,7 @@ pub stack: & 'a ItemStack,
 pub held: Option < & 'a ItemStack >,
 pub reset: bool,
 }
-#[doc(hidden)] pub fn dispatch_should_cause_block_break_reset(host: &dyn ClientHost, stack: & ItemStack, held: Option < & ItemStack >, reset: & mut bool) {
+#[doc(hidden)] pub fn dispatch_should_cause_block_break_reset(host: &dyn ClientHost, stack: & ItemStack, held: Option < & ItemStack >, reset: & mut bool) { 
 
 if !super::has_part_hook(HookId::ShouldCauseBlockBreakReset) { return; } let part_table = super::parts(HookId::ShouldCauseBlockBreakReset, "should_cause_block_break_reset"); let parts = part_table.for_hook(HookId::ShouldCauseBlockBreakReset).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = ShouldCauseBlockBreakResetEvent { stack, held, reset: *reset }; for part in super::entered_parts(parts, "should_cause_block_break_reset") { part.should_cause_block_break_reset(host, &mut event);  } *reset = event.reset; }
 /// What [`ItemPart::should_cause_reequip_animation`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18729,7 +18729,7 @@ pub hand: Hand,
 pub slot_changed: bool,
 pub reequip: bool,
 }
-#[doc(hidden)] pub fn dispatch_should_cause_reequip_animation(host: &dyn ClientHost, stack: & ItemStack, old: Option < & ItemStack >, hand: Hand, slot_changed: bool, reequip: & mut bool) {
+#[doc(hidden)] pub fn dispatch_should_cause_reequip_animation(host: &dyn ClientHost, stack: & ItemStack, old: Option < & ItemStack >, hand: Hand, slot_changed: bool, reequip: & mut bool) { 
 
 if !super::has_part_hook(HookId::ShouldCauseReequipAnimation) { return; } let part_table = super::parts(HookId::ShouldCauseReequipAnimation, "should_cause_reequip_animation"); let parts = part_table.for_hook(HookId::ShouldCauseReequipAnimation).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = ShouldCauseReequipAnimationEvent { stack, old, hand, slot_changed, reequip: *reequip }; for part in super::entered_parts(parts, "should_cause_reequip_animation") { part.should_cause_reequip_animation(host, &mut event);  } *reequip = event.reequip; }
 /// What [`BlockPart::should_check_weak_power`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18742,7 +18742,7 @@ pub state: BlockState,
 pub direction: Direction,
 pub check: bool,
 }
-#[doc(hidden)] pub fn dispatch_should_check_weak_power(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, direction: Direction, check: & mut bool) {
+#[doc(hidden)] pub fn dispatch_should_check_weak_power(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, direction: Direction, check: & mut bool) { 
 
 if !super::has_part_hook(HookId::ShouldCheckWeakPower) { return; } let part_table = super::parts(HookId::ShouldCheckWeakPower, "should_check_weak_power"); let parts = part_table.for_hook(HookId::ShouldCheckWeakPower).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = ShouldCheckWeakPowerEvent { dimension, pos, state, direction, check: *check }; for part in super::entered_parts(parts, "should_check_weak_power") { part.should_check_weak_power(level, &mut event);  } *check = event.check; }
 /// What [`BlockPart::should_display_fluid_overlay`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18753,7 +18753,7 @@ pub state: BlockState,
 pub fluid: mod_api :: FluidState,
 pub overlay: bool,
 }
-#[doc(hidden)] pub fn dispatch_should_display_fluid_overlay(host: &dyn ClientHost, state: BlockState, fluid: mod_api :: FluidState, overlay: & mut bool) {
+#[doc(hidden)] pub fn dispatch_should_display_fluid_overlay(host: &dyn ClientHost, state: BlockState, fluid: mod_api :: FluidState, overlay: & mut bool) { 
 
 if !super::has_part_hook(HookId::ShouldDisplayFluidOverlay) { return; } let part_table = super::parts(HookId::ShouldDisplayFluidOverlay, "should_display_fluid_overlay"); let parts = part_table.for_hook(HookId::ShouldDisplayFluidOverlay).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = ShouldDisplayFluidOverlayEvent { state, fluid, overlay: *overlay }; for part in super::entered_parts(parts, "should_display_fluid_overlay") { part.should_display_fluid_overlay(host, &mut event);  } *overlay = event.overlay; }
 /// What [`BlockPart::should_hide_adjacent_fluid_face`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18765,7 +18765,7 @@ pub direction: Direction,
 pub fluid: mod_api :: FluidState,
 pub hidden: bool,
 }
-#[doc(hidden)] pub fn dispatch_should_hide_adjacent_fluid_face(host: &dyn ClientHost, state: BlockState, direction: Direction, fluid: mod_api :: FluidState, hidden: & mut bool) {
+#[doc(hidden)] pub fn dispatch_should_hide_adjacent_fluid_face(host: &dyn ClientHost, state: BlockState, direction: Direction, fluid: mod_api :: FluidState, hidden: & mut bool) { 
 
 if !super::has_part_hook(HookId::ShouldHideAdjacentFluidFace) { return; } let part_table = super::parts(HookId::ShouldHideAdjacentFluidFace, "should_hide_adjacent_fluid_face"); let parts = part_table.for_hook(HookId::ShouldHideAdjacentFluidFace).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = ShouldHideAdjacentFluidFaceEvent { state, direction, fluid, hidden: *hidden }; for part in super::entered_parts(parts, "should_hide_adjacent_fluid_face") { part.should_hide_adjacent_fluid_face(host, &mut event);  } *hidden = event.hidden; }
 /// What [`BlockPart::should_redstone_wire_connect_to`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18778,7 +18778,7 @@ pub state: BlockState,
 pub direction: Option < Direction >,
 pub connected: bool,
 }
-#[doc(hidden)] pub fn dispatch_should_redstone_wire_connect_to(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, direction: Option < Direction >, connected: & mut bool) {
+#[doc(hidden)] pub fn dispatch_should_redstone_wire_connect_to(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, direction: Option < Direction >, connected: & mut bool) { 
 
 if !super::has_part_hook(HookId::ShouldRedstoneWireConnectTo) { return; } let part_table = super::parts(HookId::ShouldRedstoneWireConnectTo, "should_redstone_wire_connect_to"); let parts = part_table.for_hook(HookId::ShouldRedstoneWireConnectTo).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = ShouldRedstoneWireConnectToEvent { dimension, pos, state, direction, connected: *connected }; for part in super::entered_parts(parts, "should_redstone_wire_connect_to") { part.should_redstone_wire_connect_to(level, &mut event);  } *connected = event.connected; }
 /// What [`Hooks::play_sound`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18827,7 +18827,7 @@ pub entity: Option < (u32 , & 'a str) >,
 pub cause: BlockSoundCause,
 pub sound: & 'a mut BlockSoundType,
 }
-#[doc(hidden)] pub fn dispatch_sound_type(context: &dyn LoopContext, pos: BlockPos, state: BlockState, entity: Option < (u32 , & str) >, cause: BlockSoundCause, sound: & mut BlockSoundType) {
+#[doc(hidden)] pub fn dispatch_sound_type(context: &dyn LoopContext, pos: BlockPos, state: BlockState, entity: Option < (u32 , & str) >, cause: BlockSoundCause, sound: & mut BlockSoundType) { 
 
 if !super::has_part_hook(HookId::SoundType) { return; } let part_table = super::parts(HookId::SoundType, "sound_type"); let parts = part_table.for_hook(HookId::SoundType).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = SoundTypeEvent { pos, state, entity, cause, sound }; for part in super::entered_parts(parts, "sound_type") { part.sound_type(context, &mut event);  }  }
 /// What [`Hooks::spread_players_teleport`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18867,7 +18867,7 @@ pub pos: BlockPos,
 pub viewpoint: [f64 ; 3],
 pub seen: & 'a mut BlockState,
 }
-#[doc(hidden)] pub fn dispatch_state_at_viewpoint(host: &dyn ClientHost, state: BlockState, pos: BlockPos, viewpoint: [f64 ; 3], seen: & mut BlockState) {
+#[doc(hidden)] pub fn dispatch_state_at_viewpoint(host: &dyn ClientHost, state: BlockState, pos: BlockPos, viewpoint: [f64 ; 3], seen: & mut BlockState) { 
 
 if !super::has_part_hook(HookId::StateAtViewpoint) { return; } let part_table = super::parts(HookId::StateAtViewpoint, "state_at_viewpoint"); let parts = part_table.for_hook(HookId::StateAtViewpoint).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = StateAtViewpointEvent { state, pos, viewpoint, seen }; for part in super::entered_parts(parts, "state_at_viewpoint") { part.state_at_viewpoint(host, &mut event);  }  }
 /// What [`BlockEntityPart::stateful_block_entity`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18877,7 +18877,7 @@ pub struct StatefulBlockEntityEvent<'a> {
 pub block: & 'a str,
 pub stateful: bool,
 }
-#[doc(hidden)] pub fn dispatch_stateful_block_entity(host: &dyn Host, block: & str, stateful: & mut bool) {
+#[doc(hidden)] pub fn dispatch_stateful_block_entity(host: &dyn Host, block: & str, stateful: & mut bool) { 
 
 if !super::has_part_hook(HookId::StatefulBlockEntity) { return; } let part_table = super::parts(HookId::StatefulBlockEntity, "stateful_block_entity"); let parts = part_table.for_hook(HookId::StatefulBlockEntity).map_or(&[][..], |table| table.block_entity(|| Some(block))); if parts.is_empty() { return; } let mut event = StatefulBlockEntityEvent { block, stateful: *stateful }; for part in super::entered_parts(parts, "stateful_block_entity") { part.stateful_block_entity(host, &mut event);  } *stateful = event.stateful; }
 /// What [`Hooks::station_closing`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -18976,8 +18976,8 @@ pub stack: & 'a ItemStack,
 pub tool: & 'a ToolUse,
 pub final_state: & 'a mut Option < BlockState >,
 }
-#[doc(hidden)] pub fn dispatch_tool_modified_state(host: &dyn Host, state: BlockState, stack: & ItemStack, tool: & ToolUse, final_state: & mut Option < BlockState >, cancel: & mut bool) {
-if *cancel { return; }
+#[doc(hidden)] pub fn dispatch_tool_modified_state(host: &dyn Host, state: BlockState, stack: & ItemStack, tool: & ToolUse, final_state: & mut Option < BlockState >, cancel: & mut bool) { 
+if *cancel { return; } 
 if !super::has_part_hook(HookId::ToolModifiedState) { return; } let part_table = super::parts(HookId::ToolModifiedState, "tool_modified_state"); let parts = part_table.for_hook(HookId::ToolModifiedState).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = ToolModifiedStateEvent { state, stack, tool, final_state }; for part in super::entered_parts(parts, "tool_modified_state") { if matches!(part.tool_modified_state(host, &mut event), Flow::Cancel) { *cancel = true;  break; }  }  }
 /// What [`Hooks::use_item_on_block`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
 #[allow(missing_docs)]
@@ -19044,7 +19044,7 @@ pub pos: BlockPos,
 pub state: BlockState,
 pub receive: bool,
 }
-#[doc(hidden)] pub fn dispatch_weak_changes(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, receive: & mut bool) {
+#[doc(hidden)] pub fn dispatch_weak_changes(level: &dyn LevelHost, dimension: LevelDimension, pos: BlockPos, state: BlockState, receive: & mut bool) { 
 
 if !super::has_part_hook(HookId::WeakChanges) { return; } let part_table = super::parts(HookId::WeakChanges, "weak_changes"); let parts = part_table.for_hook(HookId::WeakChanges).map_or(&[][..], |table| table.block_value(state)); if parts.is_empty() { return; } let mut event = WeakChangesEvent { dimension, pos, state, receive: *receive }; for part in super::entered_parts(parts, "weak_changes") { part.weak_changes(level, &mut event);  } *receive = event.receive; }
 /// What [`Hooks::wind_burst`] is told. Each field is that hook's argument of the same name, described in the hook's doc.
@@ -19087,7 +19087,7 @@ pub stack: & 'a ItemStack,
 pub experience: u32,
 pub ratio: f32,
 }
-#[doc(hidden)] pub fn dispatch_xp_repair_ratio(host: &dyn Host, player: u128, stack: & ItemStack, experience: u32, ratio: & mut f32) {
+#[doc(hidden)] pub fn dispatch_xp_repair_ratio(host: &dyn Host, player: u128, stack: & ItemStack, experience: u32, ratio: & mut f32) { 
 
 if !super::has_part_hook(HookId::XpRepairRatio) { return; } let part_table = super::parts(HookId::XpRepairRatio, "xp_repair_ratio"); let parts = part_table.for_hook(HookId::XpRepairRatio).map_or(&[][..], |table| table.item(|| super::content::registry_keys::item_id(stack.item()))); if parts.is_empty() { return; } let mut event = XpRepairRatioEvent { player, stack, experience, ratio: *ratio }; for part in super::entered_parts(parts, "xp_repair_ratio") { part.xp_repair_ratio(host, &mut event);  } *ratio = event.ratio; }
 #[doc(hidden)]
