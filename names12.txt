@@ -1,0 +1,162 @@
+﻿=== Command
+types.rs:33
+pub struct Command {
+    /// The usage.
+    pub usage: String,
+    /// The operator level a player needs to run this usage (0: everyone).
+    /// Shared prefixes stay visible when needed to reach a lower-level usage.
+    pub level: u8,
+}
+
+impl Command {
+    /// A usage every player may run.
+    pub fn new(usage: &str) -> Self {
+        Self {
+            usage: usage.to_owned(),
+            level: 0,
+        }
+    }
+    /// The same, for operators of `level` and above.
+    pub fn op(usage: &str, level: u8) -> Self {
+        Self {
+            usage: usage.to_owned(),
+            level: level.min(4),
+        }
+    }
+=== CommandInvocation
+mod.rs:150
+pub struct CommandInvocation {
+    /// The literal path, including the registered command name and subcommands.
+    pub literals: Vec<String>,
+    /// Present arguments in parse order; omitted optional arguments have no entry.
+    pub arguments: Vec<CommandArgument>,
+    /// The level the command executes in, after `execute in`; the console's is the overworld.
+    pub dimension: DimensionKey,
+    /// The execution position, after `execute at` or `positioned`; the console's is the
+    /// world spawn's block corner.
+    pub position: [f64; 3],
+}
+
+impl CommandInvocation {
+    /// Build an invocation from its parsed literal path, resolved arguments and execution
+    /// level and position.
+    pub fn new(
+        literals: Vec<String>,
+        arguments: Vec<CommandArgument>,
+        dimension: DimensionKey,
+        position: [f64; 3],
+    ) -> Self {
+        Self {
+            literals,
+=== CommandSource
+mod.rs:10
+pub enum CommandSource {
+    /// A player's command; their state is swapped in for the listener.
+    Player {
+        /// The player who submitted the command.
+        player: PlayerRef,
+        /// The execution permission, including function overrides.
+        permission: PermissionLevel,
+    },
+    /// The dedicated server console or RCON.
+    Console {
+        /// The execution permission.
+        permission: PermissionLevel,
+    },
+    /// A command block, including when `execute` moves its execution position.
+    CommandBlock {
+        /// The block's position, not the execution position.
+        position: [i32; 3],
+        /// The block's dimension.
+        level: DimensionKey,
+        /// The execution permission.
+        permission: PermissionLevel,
+    },
+    /// A command-block minecart.
+=== BlockUpdateFlags
+types.rs:189
+pub struct BlockUpdateFlags(pub(crate) i32);
+
+impl BlockUpdateFlags {
+    /// No update flags.
+    pub const NONE: Self = Self(0);
+    /// Notify neighboring blocks.
+    pub const NEIGHBORS: Self = Self(1);
+    /// Send the block update to clients.
+    pub const CLIENTS: Self = Self(2);
+    /// Suppress the client-side block update notification.
+    pub const INVISIBLE: Self = Self(4);
+    /// Skip neighbor shape updates.
+    pub const KNOWN_SHAPE: Self = Self(16);
+    /// Suppress drops caused by neighbor shape updates.
+    pub const SUPPRESS_DROPS: Self = Self(32);
+    /// The replacement is caused by a piston.
+    pub const MOVE_BY_PISTON: Self = Self(64);
+    /// Skip wire shape updates.
+    pub const SKIP_SHAPE_UPDATE_ON_WIRE: Self = Self(128);
+    /// Skip the removed block entity's side effects, including container spills.
+    pub const SKIP_BLOCK_ENTITY_SIDE_EFFECTS: Self = Self(256);
+    /// Skip the new block's on-place behavior.
+    pub const SKIP_ON_PLACE: Self = Self(512);
+=== ParticleOptions
+particles.rs:28
+pub struct ParticleOptions {
+    /// Provider identity issued by `Registrar::particle_key`, never an engine enum.
+    pub ty: ParticleKey,
+    /// `BlockParticleOption`: the block's particle sprite and terrain tint.
+    pub block: Option<(String, u32)>,
+    /// RGB(A) for dust, spells, entity effects and tinted leaves.
+    pub color: [f32; 4],
+    /// `DustParticleOptions.scale`, `PowerParticleOption.power`, `SpellParticleOption.power`,
+    /// `SculkChargeParticleOptions.roll`, `ShriekParticleOption.delay`.
+    pub scale: f32,
+    /// `DustColorTransitionOptions.toColor` (`color` is the from colour).
+    pub to_color: [f32; 3],
+    /// `TrailParticleOption`: the point it flies to and how many ticks it takes.
+    pub trail: Option<([f64; 3], i32)>,
+    /// `ItemParticleOption`: the particle sprite of each layer of the item's
+    /// model as resolved for the ground.
+    pub item: Option<Vec<String>>,
+    /// Stack sent by `ServerLevel.sendParticles`; clients resolve its ground model at seed 0.
+    /// Invalid, unknown or oversized stacks cause the send to return false.
+    pub item_stack: Option<crate::ItemStack>,
+    /// `GeyserParticleOptions.waterBlocks` and `GeyserBaseParticleOptions`'
+    /// `waterBlocks` and `burstImpulseBase` (0 where the type has none).
+    pub geyser: Option<(i32, f32)>,
+=== SoundSource
+types.rs:493
+pub enum SoundSource {
+    /// The master volume, which scales every other source.
+    Master,
+    /// Music discs aside, the game's music.
+    Music,
+    /// Jukeboxes and music discs.
+    Records,
+    /// Rain and thunder.
+    Weather,
+    /// Sounds blocks make.
+    Blocks,
+    /// Hostile creatures.
+    Hostile,
+    /// Friendly and neutral creatures.
+    Neutral,
+    /// Players.
+    Players,
+    /// Ambient and cave sounds.
+    Ambient,
+    /// Voice sounds.
+    Voice,
+    /// Interface sounds, such as a button click.
+    Ui,
+=== air / block_state / dimension
+registry_keys.rs:250: pub fn dimension_id(slot: u32) -> Option<&'static str> {
+registry_keys.rs:383: pub fn dimension_id(key: DimensionKey) -> Option<&'static str> {
+types.rs:341: pub fn dimension_id(self) -> &'static str {
+types.rs:456: pub fn name(self) -> &'static str {
+types.rs:1060: pub fn name(self) -> &'static str {
+types.rs:1105: pub fn name(self) -> &'static str {
+types.rs:158: pub fn id(self) -> u32 {
+types.rs:203: pub fn id(self) -> u32 {
+types.rs:657: pub fn id(self) -> i32 {
+types.rs:827: pub fn name(self) -> &'static str {
+types.rs:856: pub fn name(self) -> &'static str {

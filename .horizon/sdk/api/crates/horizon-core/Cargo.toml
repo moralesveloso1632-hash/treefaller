@@ -1,0 +1,27 @@
+[package]
+name = "horizon-core"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "LGPL-3.0-or-later"
+description = "Horizon simulation foundations for the pinned vanilla Java Edition target"
+autobins = false
+autoexamples = false
+autotests = false
+autobenches = false
+build = false
+
+[dependencies]
+libm = { version = "=0.2.16", features = ["arch"] }
+serde_json = { version = "1.0.151", features = ["raw_value", "std"] }
+serde = { version = "1", features = ["alloc", "derive", "serde_derive", "std"] }
+unicode_names2 = { version = "=2.0.0" }
+
+[features]
+rng-trace = []
+
+[lints.clippy]
+too_many_arguments = "allow"
+type_complexity = "allow"
+needless_range_loop = "allow"
+large_enum_variant = "allow"

@@ -1,0 +1,36 @@
+[package]
+name = "horizon-mod-api"
+version = "0.1.0"
+edition = "2024"
+license = "LGPL-3.0-or-later"
+description = "The mod API: hooks, hosts, handles and parts, for native and WebAssembly mods"
+publish = false
+autobins = false
+autoexamples = false
+autotests = false
+autobenches = false
+build = "build.rs"
+
+[lib]
+name = "mod_api"
+
+[dependencies]
+horizon-mod-vocab = { path = "../horizon-mod-vocab" }
+horizon-mod-runtime = { path = "../horizon-mod-runtime" }
+horizon-core = { path = "../horizon-core" }
+horizon-mod-api-macros = { path = "../horizon-mod-api-macros" }
+serde = { version = "1", features = ["alloc", "derive", "serde_derive", "std"] }
+serde_json = { version = "1.0.151", features = ["raw_value", "std"] }
+log = { version = "0.4" }
+bytemuck = { version = "1.24", features = ["aarch64_simd", "bytemuck_derive", "derive", "extern_crate_alloc", "min_const_generics"] }
+glam = { version = "0.30", features = ["std"] }
+
+[features]
+testing = ["horizon-mod-vocab/testing"]
+wasm-guest = []
+
+[lints.clippy]
+too_many_arguments = "allow"
+type_complexity = "allow"
+needless_range_loop = "allow"
+large_enum_variant = "allow"

@@ -1,0 +1,4 @@
+# The mod API's source with its generated code, for one game build.
+[workspace]
+resolver = "2"
+members = ["crates/horizon-core", "crates/horizon-mod-api", "crates/horizon-mod-api-macros", "crates/horizon-mod-runtime", "crates/horizon-mod-vocab"]

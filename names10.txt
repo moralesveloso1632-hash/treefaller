@@ -1,0 +1,17 @@
+﻿=== scheduled_task
+hook:scheduled_task  (NeoForge: none (vanilla MinecraftServer.tell(TickTask); NeoForge adds no event for it))
+    A task a mod scheduled with `schedule_task` is due, at the start of the server tick it
+=== register_commands
+hook:register_commands  (NeoForge: RegisterCommandsEvent)
+    The commands native mods add to the server's command tree: push
+=== run_mod_command
+hook:run_mod_command  (NeoForge: none (a command's executor is part of the Brigadier node added in RegisterCommandsEvent; CommandEvent only watches executions))
+    Execute a parsed mod command after permission checks and argument resolution.
+hook:container_opened  (NeoForge: none (not NeoForge's PlayerContainerEvent.Open: this hook can cancel the opening))
+    A player opens one of the game's own menus (`ServerPlayer.openMenu`; the
+hook:creative_slot  (NeoForge: none (vanilla ServerGamePacketListenerImpl.handleSetCreativeModeSlot; NeoForge adds no event or extension for it))
+    A creative-mode player sets a slot of their inventory from the
+hook:player_changed_dimension  (NeoForge: PlayerEvent.PlayerChangedDimensionEvent)
+    `player` (`name`) changed dimension (NeoForge's
+hook:vehicle_moved  (NeoForge: none (NeoForge has no vehicle move event; EntityTickEvent covers the tick))
+    A boat or minecart (`kind`, `minecraft:oak_boat`) moved since the last
