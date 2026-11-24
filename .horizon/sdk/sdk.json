@@ -1,0 +1,263 @@
+{
+  "schema": 1,
+  "build": {
+    "commit": "f1bb66f353cf67f2aa4665293fc75c8d91186fc7",
+    "game": "26.3",
+    "date": "2026-11-22"
+  },
+  "package_format": 6,
+  "toolchain": {
+    "rust": "1.99.1"
+  },
+  "content_api": "0.2",
+  "surface": {
+    "hash": "2569252f537f461ff976bcb1882a82e4",
+    "previous": "2b77287de099c9316278ba7ac4d83590fdb7ef30",
+    "source": "additive",
+    "changes": [
+      "fn:item::mod_slots::native_mod_slot_changed",
+      "fn:item::mod_slots::native_mod_slot_will_change",
+      "fn:profiling::guard",
+      "handle:ChunkRef::set_transient_forced",
+      "handle:ExportRequest::new",
+      "handle:PlayerInventoryMove::new",
+      "handle:PlayerInventorySnapshot::new",
+      "handle:PlayerRef::send_sidebar",
+      "hook:export_ended",
+      "hook:hotbar_attack_indicator_progress",
+      "hook:mod_slot_changed",
+      "hook:mod_slot_will_change",
+      "hook:registered_player_command",
+      "method:Hooks::export_ended",
+      "method:Hooks::hotbar_attack_indicator_progress",
+      "method:Hooks::mod_slot_changed",
+      "method:Hooks::mod_slot_will_change",
+      "method:Hooks::registered_player_command",
+      "method:prelude::PlayersServerHost::mod_command_raw",
+      "method:prelude::PlayersServerHost::server_move_inventory_stack",
+      "method:prelude::PlayersServerHost::server_player_inventory",
+      "trait:ClientHost",
+      "trait:ServerHost",
+      "trait:prelude::ExportClientHost",
+      "trait:prelude::ModSlotsServerHost",
+      "type:ExportEndedEvent",
+      "type:ExportError",
+      "type:ExportFormat",
+      "type:ExportRequest",
+      "type:ExportState",
+      "type:ExportStatus",
+      "type:HotbarAttackIndicatorProgressEvent",
+      "type:ModSlotChangedEvent",
+      "type:ModSlotWillChangeEvent",
+      "type:PlayerInventoryError",
+      "type:PlayerInventoryKind",
+      "type:PlayerInventoryMove",
+      "type:PlayerInventorySnapshot",
+      "type:RegisteredPlayerCommandEvent",
+      "type:profiling::Guard"
+    ],
+    "notes": [
+      {
+        "ids": [
+          "handle:ChunkRef::set_transient_forced"
+        ],
+        "why": "A mod can hold a chunk for one operation, such as finding a random teleport destination, without the ticket being saved and reopened on restart. TicketOwner and its codec are unchanged.",
+        "migrate": "Additive. Transient tickets are not listed by mod_forced_chunks or handed to validate_tickets."
+      },
+      {
+        "ids": [
+          "method:prelude::PlayersServerHost::mod_command_raw"
+        ],
+        "why": "Additive host method: a run_mod_command listener reads the untrusted text of the leaf command it was given, after execute ... run and return run, without changing CommandInvocation's layout or the run_mod_command fingerprint.",
+        "migrate": "Additive. None outside a run_mod_command listener."
+      }
+    ]
+  },
+  "mixins": {
+    "rev": "e59da9094f0c2fdda6c627fe9eff22dec6a906f0",
+    "patch": "52eaeef7cac10d894066635dc46b12f76d877416317f06eaf385f176de5e1c35"
+  },
+  "assets": {
+    "api-aarch64-apple-darwin.tar.xz": {
+      "sha256": "40bf16adb3461ebaf01d5ce857c1800b1256c855dc10e43bdcff9948f504421b",
+      "size": 18150956,
+      "kind": "api",
+      "codec": "xz",
+      "target": "aarch64-apple-darwin",
+      "side": "client"
+    },
+    "api-source.tar.xz": {
+      "sha256": "0ef2ca5c2b8af8faa41852fc897894d94818a279076749650386a839e1573f06",
+      "size": 1556416,
+      "kind": "api-source",
+      "codec": "xz"
+    },
+    "api-x86_64-pc-windows-gnu.tar.xz": {
+      "sha256": "bde5ea2a52b85891d68057180a84a8780505ddcf8930cde4fb0b4505a33f3eac",
+      "size": 19139096,
+      "kind": "api",
+      "codec": "xz",
+      "target": "x86_64-pc-windows-gnu",
+      "side": "client"
+    },
+    "api-x86_64-unknown-linux-gnu-server.tar.xz": {
+      "sha256": "7c9169f9b8e006b97b9fcc54aeeb4efd6b9f7b6b0714cfc8fe4bb9c07df17a01",
+      "size": 18394796,
+      "kind": "api",
+      "codec": "xz",
+      "target": "x86_64-unknown-linux-gnu",
+      "side": "server"
+    },
+    "api-x86_64-unknown-linux-gnu.tar.xz": {
+      "sha256": "d5fffc373112d03569019611e0f5dd4c055e5225037f3e58d864f0c235c16c31",
+      "size": 18395780,
+      "kind": "api",
+      "codec": "xz",
+      "target": "x86_64-unknown-linux-gnu",
+      "side": "client"
+    },
+    "build-data.tar.xz": {
+      "sha256": "de5c9c3f6a6bcd6728329bb89ad6435c3073874096b77eeccdd8d12a43cffeb8",
+      "size": 1974192,
+      "kind": "build-data",
+      "codec": "xz"
+    },
+    "engine-aarch64-apple-darwin.tar.xz": {
+      "sha256": "7511afbf12f510c9ae4baa63911cb99f72a0bbd2c9ab93f3f8c41cfe36b1fdf5",
+      "size": 152348892,
+      "kind": "engine",
+      "codec": "xz",
+      "target": "aarch64-apple-darwin",
+      "side": "client"
+    },
+    "engine-x86_64-pc-windows-gnu.tar.xz": {
+      "sha256": "ca840ed561169abd58e3880a31d9bcefac5bb8b7fdc52663032fc8e08b7f6b21",
+      "size": 185292528,
+      "kind": "engine",
+      "codec": "xz",
+      "target": "x86_64-pc-windows-gnu",
+      "side": "client"
+    },
+    "engine-x86_64-unknown-linux-gnu-server.tar.xz": {
+      "sha256": "4f87e1b3240f3f3a9d268273ab0dfbaf13f2e1a1243751194e3a875c3f4ced3e",
+      "size": 166893244,
+      "kind": "engine",
+      "codec": "xz",
+      "target": "x86_64-unknown-linux-gnu",
+      "side": "server"
+    },
+    "engine-x86_64-unknown-linux-gnu.tar.xz": {
+      "sha256": "b923e6f07b301cadbb382b2ce750c7fd118846d6a989dd06719206a6aba7cd50",
+      "size": 170315704,
+      "kind": "engine",
+      "codec": "xz",
+      "target": "x86_64-unknown-linux-gnu",
+      "side": "client"
+    },
+    "runtime-aarch64-apple-darwin.tar.xz": {
+      "sha256": "e00b6ac49a0654a02f8539450f369444c70c2c8d1ef403abfed896194f0ea9f8",
+      "size": 47117248,
+      "kind": "runtime",
+      "codec": "xz",
+      "target": "aarch64-apple-darwin",
+      "side": "client"
+    },
+    "runtime-x86_64-pc-windows-gnu.tar.xz": {
+      "sha256": "61969d5266579c4c9d7eeb41e4d87715548ed253c420e279b320f768b5c416b6",
+      "size": 55283372,
+      "kind": "runtime",
+      "codec": "xz",
+      "target": "x86_64-pc-windows-gnu",
+      "side": "client"
+    },
+    "runtime-x86_64-unknown-linux-gnu-server.tar.xz": {
+      "sha256": "10dc9fee62a6a534046c811f19e8073c1d8fcf2bf657cd900aa441b410e76226",
+      "size": 55928768,
+      "kind": "runtime",
+      "codec": "xz",
+      "target": "x86_64-unknown-linux-gnu",
+      "side": "server"
+    },
+    "runtime-x86_64-unknown-linux-gnu.tar.xz": {
+      "sha256": "19d413ec7ba253f2b48ce0590e0a03a1356ac72b55721b825cd6ccff698f7cda",
+      "size": 56530920,
+      "kind": "runtime",
+      "codec": "xz",
+      "target": "x86_64-unknown-linux-gnu",
+      "side": "client"
+    },
+    "surface.json": {
+      "sha256": "a72f0c5e7ea9c4c6c63bdaf7f47be06781931e51a40877cbdb63d8805e95af54",
+      "size": 7034387,
+      "kind": "surface",
+      "codec": "none"
+    }
+  },
+  "inputs": {
+    "routes": {
+      "api": {
+        "sdk": [
+          "runtime",
+          "api"
+        ]
+      },
+      "engine": {
+        "sdk": [
+          "runtime",
+          "api",
+          "engine"
+        ]
+      },
+      "package": {
+        "program": [
+          "horizon-ctl",
+          "horizon-prepare",
+          "horizon-server",
+          "horizon-wasm-std.wasm"
+        ],
+        "checkout": [
+          "exporters/manifest.json"
+        ]
+      },
+      "package-server": {
+        "program": [
+          "horizon-prepare",
+          "horizon-server",
+          "horizon-wasm-std.wasm"
+        ],
+        "checkout": [
+          "exporters/manifest.json"
+        ]
+      }
+    },
+    "how": {
+      "api": "the SDK release of the game's exact commit",
+      "engine": "the SDK release of the game's exact commit",
+      "exporters/manifest.json": "horizon-prepare compile-exporters --root CHECKOUT, then copy its server, client and manifest.json into CHECKOUT/exporters/",
+      "horizon-ctl": "cargo build PROFILE -p horizon-client-lib --bin horizon-ctl",
+      "horizon-prepare": "cargo build PROFILE -p horizon-prepare",
+      "horizon-server": "cargo build PROFILE -p horizon-server",
+      "horizon-wasm-std.wasm": "cargo run --locked -p cargo-horizon-mod -- wasm-std PROGRAM_FOLDER/horizon-wasm-std.wasm",
+      "runtime": "the SDK release of the game's exact commit"
+    },
+    "members": {
+      "api": [
+        "native_mod_entry.rs.template",
+        "points.json",
+        "internals.json",
+        "loops.json",
+        "deps/@rmeta:mod_api",
+        "deps/@rmeta:mod_points"
+      ],
+      "runtime": [
+        "horizon-prebuilt.json",
+        "bin/@program:horizon-client",
+        "deps/@dylib:horizon_mod_host",
+        "deps/@dylib:horizon_mod_wasm",
+        "deps/@dylib:mod_api",
+        "deps/@dylib:mod_vocab",
+        "deps/@dylib:mod_points"
+      ]
+    }
+  }
+}

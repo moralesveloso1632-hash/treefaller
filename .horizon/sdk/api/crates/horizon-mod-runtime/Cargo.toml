@@ -1,0 +1,25 @@
+[package]
+name = "horizon-mod-runtime"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "LGPL-3.0-or-later"
+description = "Engine-independent mod storage, attachment indexes and registry slot tables"
+publish = false
+autobins = false
+autoexamples = false
+autotests = false
+autobenches = false
+build = false
+
+[dependencies]
+horizon-core = { path = "../horizon-core" }
+
+[features]
+test-work-count = []
+
+[lints.clippy]
+too_many_arguments = "allow"
+type_complexity = "allow"
+needless_range_loop = "allow"
+large_enum_variant = "allow"
