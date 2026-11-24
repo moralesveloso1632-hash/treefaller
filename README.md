@@ -34,7 +34,7 @@ Mod nativo para **Horizon** que tala automáticamente un árbol cuando rompes un
 6. Confirma la instalación y la compilación.
 7. Si Horizon solicita permiso para ejecutar código nativo, revisa el código y autorízalo solo si confías en él.
 
-> **Aviso de seguridad:** los mods nativos pueden ejecutarse con los permisos de tu usuario y acceder a archivos del equipo. Instala únicamente código en el que confíes.
+> **Aviso de seguridad:** los mods nativos pueden ejecutarse con los permisos de tu usuario y acceder a archivos del equipo. Instala únicamente código en el que confíes. si tienes dudas eres libre de revisar el codigo utilizado.
 
 ## Cómo usarlo
 
