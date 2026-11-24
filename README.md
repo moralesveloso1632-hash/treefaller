@@ -2,7 +2,7 @@
 
 Mod nativo para **Horizon** que tala automáticamente un árbol cuando rompes uno de sus troncos con un hacha.
 
-## Demonstration
+## Prueba Visual
 
 ![TreeFeller demonstration](giff.gif)
 
