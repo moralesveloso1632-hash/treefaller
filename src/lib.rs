@@ -1,23 +1,23 @@
 //! treefaller: al romper un tronco de un árbol natural, lo tala de arriba hacia abajo.
-//! Las hojas caen como bloques. `/treefaller anim on|off` activa o desactiva la animación.
+//! Las hojas del árbol se rompen con él y sueltan su botín.
+//! `/treefaller anim on|off` activa o desactiva la animación.
 
 use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::Mutex;
 
 use mod_api::{
-    self, BlockState, BlockUpdateFlags, Command, Falling, Flow, Hand, Hooks, LevelRef,
-    PlayerDestroyedBlockEvent, PlayerRef, RegisterCommandsEvent, RunModCommandEvent,
-    ScheduledTaskEvent, ServerHost,
+    self, BlockState, Command, Flow, Hand, Hooks, LevelRef, PlayerDestroyedBlockEvent, PlayerRef,
+    RegisterCommandsEvent, RunModCommandEvent, ScheduledTaskEvent, ServerHost,
 };
 
 const MAX_LOGS: usize = 256; // más troncos que esto: no se tala
 const RADIUS: i32 = 12; // distancia horizontal máxima desde el tronco roto
 const MAX_HEIGHT: i32 = 40; // altura máxima sobre el tronco roto
 const MIN_LEAVES: usize = 5; // hojas naturales mínimas: evita talar construcciones
-const MAX_LEAVES: usize = 2000; // hojas máximas que se quitan
-const MAX_FALLING: usize = 600; // de ellas, las que caen como bloque (el juego admite 1024)
+const MAX_LEAVES: usize = 2000; // hojas máximas que se rompen
 const LEAF_REACH: i32 = 6; // distancia máxima de una hoja a un tronco
+const MAX_SCAN: i32 = 60_000; // bloques máximos a mirar buscando troncos de otros árboles
 const LAYER_DELAY_TICKS: u32 = 2; // ticks entre una capa y la siguiente
 const DIMENSION: &str = "minecraft:overworld"; // los árboles con hojas crecen aquí
 
@@ -34,17 +34,14 @@ const FACES: [[i32; 3]; 6] = [
 #[derive(Default)]
 struct Step {
     logs: Vec<[i32; 3]>,
-    leaves: Vec<([i32; 3], BlockState)>,
+    leaves: Vec<[i32; 3]>,
 }
 
 /// Una tala en marcha: pasos de arriba hacia abajo, y cuál toca ahora.
 struct Job {
     player: PlayerRef,
-    level: LevelRef,
-    air: Option<BlockState>,
     steps: Vec<Step>,
     next: usize,
-    falling: usize,
 }
 
 struct Mod {
@@ -149,30 +146,18 @@ impl Hooks for Mod {
     }
 }
 
-/// Retira un paso: rompe sus troncos como el jugador y hace caer sus hojas.
+/// Retira un paso: rompe sus troncos como el jugador y sus hojas con su botín.
 fn run_step(host: &mut dyn ServerHost, job: &mut Job) {
     let step = std::mem::take(&mut job.steps[job.next]);
     job.next += 1;
     for pos in step.logs {
         job.player.destroy_block(host, pos, false);
     }
-    let Some(air) = job.air else { return };
-    for (pos, state) in step.leaves {
-        if !job
-            .level
-            .set_block(host, pos, air, BlockUpdateFlags::CLIENTS)
-            .unwrap_or(false)
-        {
-            continue;
-        }
-        if job.falling >= MAX_FALLING {
-            continue; // ya quitada: no cae como bloque
-        }
-        job.falling += 1;
-        let at = [pos[0] as f64 + 0.5, pos[1] as f64, pos[2] as f64 + 0.5];
-        let mut falling = Falling::default();
-        falling.drop_item = false;
-        host.spawn_falling_block(DIMENSION, state, at, [0.0, 0.0, 0.0], falling);
+    for [x, y, z] in step.leaves {
+        // `destroy` rompe el bloque con partículas y suelta su botín, sin gastar el hacha.
+        host.commands().run_command(&format!(
+            "execute in {DIMENSION} run setblock {x} {y} {z} minecraft:air destroy"
+        ));
     }
 }
 
@@ -188,68 +173,100 @@ fn plan(host: &mut dyn ServerHost, origin: [i32; 3], state: BlockState) -> Optio
     if logs.is_empty() || leaf_count < MIN_LEAVES {
         return None;
     }
-    // El tronco roto ya es aire: de ahí sale el estado "aire" para quitar hojas.
-    let air = level.block_state(host, origin).filter(|s| {
-        host.block_state_string(*s)
-            .is_some_and(|n| n == "minecraft:air")
-    });
+    let mut ours = logs.clone();
+    ours.push(origin);
 
     let mut by_height: BTreeMap<i32, Step> = BTreeMap::new();
     for pos in &logs {
         by_height.entry(pos[1]).or_default().logs.push(*pos);
     }
-    let mut seeds = logs.clone();
-    seeds.push(origin);
-    if air.is_some() {
-        for (pos, st) in find_leaves(host, level, &seeds) {
-            by_height.entry(pos[1]).or_default().leaves.push((pos, st));
-        }
+    for pos in find_leaves(host, level, &ours) {
+        by_height.entry(pos[1]).or_default().leaves.push(pos);
     }
     let steps: Vec<Step> = by_height.into_values().rev().collect(); // de arriba hacia abajo
     Some(Job {
         player,
-        level,
-        air,
         steps,
         next: 0,
-        falling: 0,
     })
 }
 
-/// Hojas naturales a menos de `LEAF_REACH` pasos de algún tronco, a través de hojas.
-fn find_leaves(
+/// Distancias (en pasos a través de hojas) desde `seeds` a cada hoja natural de `allowed`
+/// (o de cualquiera, si es `None`), hasta `LEAF_REACH`.
+fn leaf_distances(
     host: &dyn ServerHost,
     level: LevelRef,
-    logs: &[[i32; 3]],
-) -> Vec<([i32; 3], BlockState)> {
-    let mut seen: HashSet<[i32; 3]> = HashSet::new();
-    let mut found: Vec<([i32; 3], BlockState)> = Vec::new();
-    let mut queue: VecDeque<([i32; 3], i32)> = logs.iter().map(|p| (*p, 0)).collect();
-    while let Some((at, dist)) = queue.pop_front() {
-        if dist >= LEAF_REACH {
+    seeds: &[[i32; 3]],
+    allowed: Option<&HashMap<[i32; 3], i32>>,
+) -> HashMap<[i32; 3], i32> {
+    let mut dist: HashMap<[i32; 3], i32> = HashMap::new();
+    let mut queue: VecDeque<([i32; 3], i32)> = seeds.iter().map(|p| (*p, 0)).collect();
+    while let Some((at, d)) = queue.pop_front() {
+        if d >= LEAF_REACH {
             continue;
         }
-        for d in FACES {
-            let p = shift(at, d);
-            if !seen.insert(p) {
+        for f in FACES {
+            let p = shift(at, f);
+            if dist.contains_key(&p) {
                 continue;
             }
-            let Some(st) = level.block_state(host, p) else {
-                continue;
+            let is_leaf = match allowed {
+                Some(set) => set.contains_key(&p),
+                None => name_at(host, level, p).is_some_and(|n| is_natural_leaves(&n)),
             };
-            let Some(n) = host.block_state_string(st) else {
+            if !is_leaf {
                 continue;
-            };
-            if is_natural_leaves(&n) {
-                found.push((p, st));
-                if found.len() >= MAX_LEAVES {
-                    return found;
+            }
+            dist.insert(p, d + 1);
+            if allowed.is_none() && dist.len() >= MAX_LEAVES {
+                return dist;
+            }
+            queue.push_back((p, d + 1));
+        }
+    }
+    dist
+}
+
+/// Hojas naturales de este árbol: las que están más cerca de sus troncos que de los de otro árbol.
+fn find_leaves(host: &dyn ServerHost, level: LevelRef, ours: &[[i32; 3]]) -> Vec<[i32; 3]> {
+    let mine = leaf_distances(host, level, ours, None);
+    if mine.is_empty() {
+        return Vec::new();
+    }
+    // Troncos de otros árboles dentro de la zona que ocupan estas hojas.
+    let mut lo = [i32::MAX; 3];
+    let mut hi = [i32::MIN; 3];
+    for p in mine.keys() {
+        for i in 0..3 {
+            lo[i] = lo[i].min(p[i] - 1);
+            hi[i] = hi[i].max(p[i] + 1);
+        }
+    }
+    let volume =
+        (hi[0] - lo[0] + 1) as i64 * (hi[1] - lo[1] + 1) as i64 * (hi[2] - lo[2] + 1) as i64;
+    let own: HashSet<[i32; 3]> = ours.iter().copied().collect();
+    let mut foreign: Vec<[i32; 3]> = Vec::new();
+    if volume <= MAX_SCAN as i64 {
+        for x in lo[0]..=hi[0] {
+            for y in lo[1]..=hi[1] {
+                for z in lo[2]..=hi[2] {
+                    let p = [x, y, z];
+                    if !own.contains(&p) && name_at(host, level, p).is_some_and(|n| is_log(&n)) {
+                        foreign.push(p);
+                    }
                 }
-                queue.push_back((p, dist + 1));
             }
         }
     }
-    found
+    let theirs = if foreign.is_empty() {
+        HashMap::new()
+    } else {
+        leaf_distances(host, level, &foreign, Some(&mine))
+    };
+    mine.into_iter()
+        .filter(|(p, d)| theirs.get(p).is_none_or(|other| d < other))
+        .map(|(p, _)| p)
+        .collect()
 }
 
 /// Troncos conectados (en diagonal también) desde `origin` hacia arriba, y cuántas hojas naturales los tocan.
