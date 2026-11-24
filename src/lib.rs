@@ -1,5 +1,5 @@
-﻿//! treefaller: al romper un tronco de un Ã¡rbol natural, lo tala de arriba hacia abajo.
-//! Las hojas caen como bloques. `/treefaller anim on|off` activa o desactiva la animaciÃ³n.
+//! treefaller: al romper un tronco de un árbol natural, lo tala de arriba hacia abajo.
+//! Las hojas caen como bloques. `/treefaller anim on|off` activa o desactiva la animación.
 
 use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
@@ -11,14 +11,15 @@ use mod_api::{
     ScheduledTaskEvent, ServerHost,
 };
 
-const MAX_LOGS: usize = 256; // mÃ¡s troncos que esto: no se tala
-const RADIUS: i32 = 12; // distancia horizontal mÃ¡xima desde el tronco roto
-const MAX_HEIGHT: i32 = 40; // altura mÃ¡xima sobre el tronco roto
-const MIN_LEAVES: usize = 5; // hojas naturales mÃ­nimas: evita talar construcciones
-const MAX_LEAVES: usize = 1000; // hojas mÃ¡ximas que caen como bloque
-const LEAF_REACH: i32 = 6; // distancia mÃ¡xima de una hoja a un tronco
+const MAX_LOGS: usize = 256; // más troncos que esto: no se tala
+const RADIUS: i32 = 12; // distancia horizontal máxima desde el tronco roto
+const MAX_HEIGHT: i32 = 40; // altura máxima sobre el tronco roto
+const MIN_LEAVES: usize = 5; // hojas naturales mínimas: evita talar construcciones
+const MAX_LEAVES: usize = 2000; // hojas máximas que se quitan
+const MAX_FALLING: usize = 600; // de ellas, las que caen como bloque (el juego admite 1024)
+const LEAF_REACH: i32 = 6; // distancia máxima de una hoja a un tronco
 const LAYER_DELAY_TICKS: u32 = 2; // ticks entre una capa y la siguiente
-const DIMENSION: &str = "minecraft:overworld"; // los Ã¡rboles con hojas crecen aquÃ­
+const DIMENSION: &str = "minecraft:overworld"; // los árboles con hojas crecen aquí
 
 const FACES: [[i32; 3]; 6] = [
     [1, 0, 0],
@@ -36,13 +37,14 @@ struct Step {
     leaves: Vec<([i32; 3], BlockState)>,
 }
 
-/// Una tala en marcha: pasos de arriba hacia abajo, y cuÃ¡l toca ahora.
+/// Una tala en marcha: pasos de arriba hacia abajo, y cuál toca ahora.
 struct Job {
     player: PlayerRef,
     level: LevelRef,
     air: Option<BlockState>,
     steps: Vec<Step>,
     next: usize,
+    falling: usize,
 }
 
 struct Mod {
@@ -76,7 +78,7 @@ impl Hooks for Mod {
         host: &mut dyn ServerHost,
         event: &mut PlayerDestroyedBlockEvent,
     ) {
-        // Nuestras propias roturas vuelven a pasar por aquÃ­: no las procesamos otra vez.
+        // Nuestras propias roturas vuelven a pasar por aquí: no las procesamos otra vez.
         if self.busy.swap(true, Ordering::Acquire) {
             return;
         }
@@ -88,7 +90,7 @@ impl Hooks for Mod {
                     self.jobs().remove(&id);
                 }
             } else {
-                // Sin animaciÃ³n: todo de golpe.
+                // Sin animación: todo de golpe.
                 while job.next < job.steps.len() {
                     run_step(host, &mut job);
                 }
@@ -103,7 +105,7 @@ impl Hooks for Mod {
             return;
         };
         if job.next >= job.steps.len() || !holds_axe(host, &job.player) {
-            return; // terminÃ³, o el hacha ya no estÃ¡ en la mano
+            return; // terminó, o el hacha ya no está en la mano
         }
         self.busy.store(true, Ordering::Release);
         run_step(host, &mut job);
@@ -137,9 +139,9 @@ impl Hooks for Mod {
         };
         self.animate.store(on, Ordering::Relaxed);
         let text = if on {
-            "animaciÃ³n activada"
+            "animación activada"
         } else {
-            "animaciÃ³n desactivada"
+            "animación desactivada"
         };
         host.commands()
             .run_command(&format!("tellraw @a {{\"text\":\"treefaller: {text}\"}}"));
@@ -163,6 +165,10 @@ fn run_step(host: &mut dyn ServerHost, job: &mut Job) {
         {
             continue;
         }
+        if job.falling >= MAX_FALLING {
+            continue; // ya quitada: no cae como bloque
+        }
+        job.falling += 1;
         let at = [pos[0] as f64 + 0.5, pos[1] as f64, pos[2] as f64 + 0.5];
         let mut falling = Falling::default();
         falling.drop_item = false;
@@ -182,7 +188,7 @@ fn plan(host: &mut dyn ServerHost, origin: [i32; 3], state: BlockState) -> Optio
     if logs.is_empty() || leaf_count < MIN_LEAVES {
         return None;
     }
-    // El tronco roto ya es aire: de ahÃ­ sale el estado "aire" para quitar hojas.
+    // El tronco roto ya es aire: de ahí sale el estado "aire" para quitar hojas.
     let air = level.block_state(host, origin).filter(|s| {
         host.block_state_string(*s)
             .is_some_and(|n| n == "minecraft:air")
@@ -192,8 +198,10 @@ fn plan(host: &mut dyn ServerHost, origin: [i32; 3], state: BlockState) -> Optio
     for pos in &logs {
         by_height.entry(pos[1]).or_default().logs.push(*pos);
     }
+    let mut seeds = logs.clone();
+    seeds.push(origin);
     if air.is_some() {
-        for (pos, st) in find_leaves(host, level, &logs) {
+        for (pos, st) in find_leaves(host, level, &seeds) {
             by_height.entry(pos[1]).or_default().leaves.push((pos, st));
         }
     }
@@ -204,10 +212,11 @@ fn plan(host: &mut dyn ServerHost, origin: [i32; 3], state: BlockState) -> Optio
         air,
         steps,
         next: 0,
+        falling: 0,
     })
 }
 
-/// Hojas naturales a menos de `LEAF_REACH` pasos de algÃºn tronco, a travÃ©s de hojas.
+/// Hojas naturales a menos de `LEAF_REACH` pasos de algún tronco, a través de hojas.
 fn find_leaves(
     host: &dyn ServerHost,
     level: LevelRef,
@@ -243,7 +252,7 @@ fn find_leaves(
     found
 }
 
-/// Troncos conectados (en diagonal tambiÃ©n) desde `origin` hacia arriba, y cuÃ¡ntas hojas naturales los tocan.
+/// Troncos conectados (en diagonal también) desde `origin` hacia arriba, y cuántas hojas naturales los tocan.
 fn find_tree(host: &dyn ServerHost, level: LevelRef, origin: [i32; 3]) -> (Vec<[i32; 3]>, usize) {
     let mut seen: HashSet<[i32; 3]> = HashSet::from([origin]);
     let mut queue: VecDeque<[i32; 3]> = VecDeque::from([origin]);
