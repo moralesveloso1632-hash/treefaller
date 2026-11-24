@@ -16,7 +16,7 @@ Mod nativo para **Horizon** que tala automáticamente un árbol cuando rompes un
 - **Minecraft:** 26.3.
 - **Plataforma:** Horizon.
 - **Tipo de mod:** nativo (Rust).
-
+- **VERSION NIGHTLY:** f1bb66f (22 nov, 21:01 UTC update-9 .
 ## Instalación
 
 1. Abre Horizon Launcher.
